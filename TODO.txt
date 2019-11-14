@@ -1,0 +1,14 @@
+해야 하는 것들
+
+<기본>
+1. OpenGL 키보드 및 마우스 조작(카메라 이동 및 Decal 뿌리기)
+2. 
+
+<Projective Texture>
+1. Decal
+2. light
+3. Projector (빛 반사?)
+
+<씬 구성>
+1. 씬 구성에 필요한 모델링 및 텍스쳐 확보
+2. 모델링으로 씬 구성. (굴곡진 곳에 Projective Texture할 수 있게 하는 것이 좋음)
