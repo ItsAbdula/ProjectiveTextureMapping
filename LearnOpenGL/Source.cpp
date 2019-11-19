@@ -1,6 +1,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "FileIO.h"
+
 #define WIDTH 800
 #define HEIGHT 600
 
@@ -17,7 +19,7 @@ int main()
 	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
 	if (window == NULL)
 	{
-		std::cout << "Failed to create GLFW window" << std::endl;
+		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
