@@ -12,3 +12,5 @@
 <씬 구성>
 1. 씬 구성에 필요한 모델링 및 텍스쳐 확보
 2. 모델링으로 씬 구성. (굴곡진 곳에 Projective Texture할 수 있게 하는 것이 좋음)
+
+todo commit push 테스트
