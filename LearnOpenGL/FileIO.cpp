@@ -3,7 +3,7 @@
 string FileIO::read_file(string path)
 {
 	inputStream.open(path);
-	if (inputStream.is_open == false)
+	if (inputStream.is_open() == false)
 	{
 		cerr << "Can't open : " << path << endl;
 	}
@@ -20,7 +20,7 @@ string FileIO::read_file(string path)
 void FileIO::write_file(string path, string contents)
 {
 	outputStream.open(path);
-	if (outputStream.is_open == false)
+	if (outputStream.is_open() == false)
 	{
 		cerr << "Can't open : " << path << endl;
 	}
