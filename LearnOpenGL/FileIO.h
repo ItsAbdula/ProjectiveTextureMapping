@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FILEIO_H
+
+#define FILEIO_H
 
 #include <iostream>
 #include <fstream>
@@ -16,3 +18,5 @@ private:
 	ifstream inputStream;
 	ofstream outputStream;
 };
+
+#endif
