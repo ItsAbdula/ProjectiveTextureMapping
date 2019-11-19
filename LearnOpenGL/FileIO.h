@@ -1,6 +1,4 @@
-#ifndef FileIO_H
-
-#define FileIO_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -11,12 +9,10 @@ using namespace std;
 class FileIO
 {
 public:
-	string read_file(const string path);
-	void write_file(const string path, string contents);
+	string read_file(string path);
+	void write_file(string path, string contents);
 
 private:
 	ifstream inputStream;
 	ofstream outputStream;
 };
-
-#endif
