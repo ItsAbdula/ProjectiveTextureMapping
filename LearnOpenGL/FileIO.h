@@ -1,22 +1,17 @@
-#ifndef FILEIO_H
-
-#define FILEIO_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
-using namespace std;
 
 class FileIO
 {
 public:
-	string read_file(string path);
-	void write_file(string path, string contents);
+	std::string read_file(std::string path);
+	void write_file(std::string path, std::string contents);
 
 private:
-	ifstream inputStream;
-	ofstream outputStream;
+	std::ifstream inputStream;
+	std::ofstream outputStream;
 };
-
-#endif
