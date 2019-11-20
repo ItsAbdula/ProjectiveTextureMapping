@@ -123,10 +123,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="OpenGLHelper.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileIO.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="OpenGLHelper.h" />
+    <ClInclude Include="ShaderType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
