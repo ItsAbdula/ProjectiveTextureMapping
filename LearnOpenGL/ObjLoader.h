@@ -1,6 +1,9 @@
 #pragma once
 
 #include <string>
+
+#include <glm/vec3.hpp>
+
 #include "OpenGLHelper.h"
 
-bool openObj(const std::string fileName, std::vector<pos3d> &vertices);
+bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices);

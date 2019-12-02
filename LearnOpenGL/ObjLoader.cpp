@@ -3,10 +3,12 @@
 #include <fstream>
 #include <vector>
 
+#include <glm/vec3.hpp>
+
 #include "ObjLoader.h"
 #include "OpenGLHelper.h"
 
-bool openObj(const std::string fileName, std::vector<pos3d> &vertices)
+bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices)
 {
 	vertices.clear();
 
@@ -14,8 +16,8 @@ bool openObj(const std::string fileName, std::vector<pos3d> &vertices)
 	std::string line;
 
 	char op[3];
-	pos3d pos;
-	std::vector<pos3d> vertexIndices;
+	glm::vec3 pos;
+	std::vector<glm::vec3> vertexIndices;
 
 	ifs.open("../Models/" + fileName);
 
@@ -62,7 +64,7 @@ bool openObj(const std::string fileName, std::vector<pos3d> &vertices)
 				faceVertexIndicies.push_back(vIndex - 1);
 			}
 
-			for (int i = 0; i < faceVertexIndicies.size(); i++)
+			for (size_t i = 0; i < faceVertexIndicies.size(); i++)
 			{
 				if (i > 2) break;
 
