@@ -124,12 +124,14 @@
   <ItemGroup>
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="ObjLoader.cpp" />
     <ClCompile Include="OpenGLHelper.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ObjLoader.h" />
     <ClInclude Include="OpenGLHelper.h" />
     <ClInclude Include="ShaderType.h" />
   </ItemGroup>
