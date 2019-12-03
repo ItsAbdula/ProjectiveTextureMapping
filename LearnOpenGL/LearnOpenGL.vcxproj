@@ -129,6 +129,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ObjLoader.h" />
