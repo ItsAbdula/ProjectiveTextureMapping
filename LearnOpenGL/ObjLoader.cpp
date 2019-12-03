@@ -7,6 +7,7 @@
 
 #include "ObjLoader.h"
 #include "OpenGLHelper.h"
+#include "Logger.h"
 
 bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices)
 {
@@ -64,11 +65,26 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices)
 				faceVertexIndicies.push_back(vIndex - 1);
 			}
 
-			for (size_t i = 0; i < faceVertexIndicies.size(); i++)
+			if (faceVertexIndicies.size() == 3)
 			{
-				if (i > 2) break;
+				vertices.push_back(vertexIndices[faceVertexIndicies[0]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[1]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[2]]);
+			}
+			else if (faceVertexIndicies.size() == 4)
+			{
+				vertices.push_back(vertexIndices[faceVertexIndicies[0]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[1]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[2]]);
 
-				vertices.push_back(vertexIndices[faceVertexIndicies[i]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[0]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[2]]);
+				vertices.push_back(vertexIndices[faceVertexIndicies[3]]);
+			}
+			else
+			{
+				GLchar infoLog[512] = { 0, };
+				log_error(infoLog, "faceVertexIndices.size() : " + faceVertexIndicies.size());
 			}
 		}
 	}
