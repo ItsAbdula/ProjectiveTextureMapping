@@ -62,18 +62,17 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	auto cam_programID = build_program("Camera");
-	unsigned int VBO, VAO;
+	unsigned int VBO, VAO, normal;
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> vertexNormals;
 	openObj("teapot.obj", vertices, vertexNormals);
 
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
 	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
