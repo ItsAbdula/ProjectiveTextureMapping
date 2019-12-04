@@ -65,7 +65,8 @@ int main()
 	unsigned int VBO, VAO;
 
 	std::vector<glm::vec3> vertices;
-	openObj("teapot.obj", vertices);
+	std::vector<glm::vec3> vertexNormals;
+	openObj("teapot.obj", vertices, vertexNormals);
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
