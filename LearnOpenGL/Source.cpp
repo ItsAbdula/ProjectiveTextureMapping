@@ -96,11 +96,9 @@ int main()
 		{
 			glUseProgram(cam_programID);
 
-			// pass projection matrix to shader (note that in this case it could change every frame)
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			glUniformMatrix4fv(glGetUniformLocation(cam_programID, "projection"), 1, GL_FALSE, &projection[0][0]);
 
-			// camera/view transformation
 			glm::mat4 view = camera.GetViewMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(cam_programID, "view"), 1, GL_FALSE, &view[0][0]);
 
