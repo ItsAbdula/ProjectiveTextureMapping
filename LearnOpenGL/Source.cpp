@@ -70,6 +70,7 @@ int main()
 	auto cam_programID = build_program("Camera");
 	auto lighting = build_program("Lighting_Specular");
 	auto lamp = build_program("Lighting_Lamp");
+	auto texture = build_program("Texture");
 
 	unsigned int VBO, VAO, normal;
 	unsigned int lightVAO;
@@ -107,6 +108,34 @@ int main()
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	}
 
+	unsigned int texture1;
+	{
+		glGenTextures(1, &texture1);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		int width, height, nrChannels;
+		// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+		Image *tex = loadImage("container.jpg", &width, &height, &nrChannels);
+		if (tex != NULL && tex->getData() != NULL)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->getData());
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			stbi_image_free(tex->getData());
+			free(tex);
+		}
+
+		glUseProgram(texture);
+
+		glUniform1i(glGetUniformLocation(texture, "texture"), 0);
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		double currentFrame = glfwGetTime();
@@ -117,6 +146,9 @@ int main()
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
 
 		glUseProgram(lighting);
 
