@@ -34,6 +34,9 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// lighting
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+
 int main()
 {
 	glfwInit();
@@ -62,30 +65,44 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	auto cam_programID = build_program("Camera");
+	auto lighting = build_program("Lighting_Specular");
+	auto lamp = build_program("Lighting_Lamp");
+
 	unsigned int VBO, VAO, normal;
+	unsigned int lightVAO;
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> vertexNormals;
 	openObj("teapot.obj", vertices, vertexNormals);
+	{
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
 
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
+		glGenBuffers(1, &normal);
+		glBindBuffer(GL_ARRAY_BUFFER, normal);
+		glBufferData(GL_ARRAY_BUFFER, vertexNormals.size() * sizeof(glm::vec3), &vertexNormals[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &normal);
-	glBindBuffer(GL_ARRAY_BUFFER, normal);
-	glBufferData(GL_ARRAY_BUFFER, vertexNormals.size() * sizeof(glm::vec3), &vertexNormals[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		glBindBuffer(GL_ARRAY_BUFFER, normal);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	}
+	{
+		glGenVertexArrays(1, &lightVAO);
+		glBindVertexArray(lightVAO);
 
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, normal);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	}
 
 	while (!glfwWindowShouldClose(window))
 	{

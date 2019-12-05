@@ -17,12 +17,12 @@ GLuint build_program(const std::string name)
 	auto programID = glCreateProgram();
 	for (auto i : shaderIDs)
 	{
-		glAttachShader(programID, shaderIDs.at(i - 1));
+		glAttachShader(programID, i);
 	}
 	glLinkProgram(programID);
 	for (auto i : shaderIDs)
 	{
-		glDeleteShader(shaderIDs.at(i - 1));
+		glDeleteShader(i);
 	}
 
 	return programID;
