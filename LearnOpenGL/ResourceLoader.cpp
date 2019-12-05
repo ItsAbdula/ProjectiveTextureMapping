@@ -5,9 +5,34 @@
 
 #include <glm/vec3.hpp>
 
+#include <stb_image.h>
+
 #include "ResourceLoader.h"
 #include "OpenGLHelper.h"
 #include "Logger.h"
+
+Image::Image(int _width, int _height, int _cahnnel, unsigned char *_data)
+{
+	width = _width;
+	height = _height;
+	channel = _cahnnel;
+	data = _data;
+}
+
+int Image::getWidth()
+{
+	return width;
+}
+
+int Image::getHeight()
+{
+	return height;
+}
+
+unsigned char *Image::getData()
+{
+	return data;
+}
 
 bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexNormals)
 {
@@ -119,4 +144,19 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 	ifs.close();
 
 	return true;
+}
+
+Image *loadImage(const std::string fileName, int *width, int *height, int *nrChannels)
+{
+	stbi_set_flip_vertically_on_load(true);
+
+	unsigned char *data = stbi_load(fileName.c_str(), width, height, nrChannels, 0);
+	if (data == NULL)
+	{
+		std::cout << "Failed to load texture : " + fileName << std::endl;
+	}
+
+	Image *img = new Image(*width, *height, *nrChannels, data);
+
+	return img;
 }
