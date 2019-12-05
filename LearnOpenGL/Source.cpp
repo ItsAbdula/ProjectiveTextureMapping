@@ -6,7 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "OpenGLHelper.h"
-#include "ObjLoader.h"
+#include "ResourceLoader.h"
 #include "Camera.h"
 
 #include "FileIO.h"

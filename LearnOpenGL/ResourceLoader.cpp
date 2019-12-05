@@ -5,7 +5,7 @@
 
 #include <glm/vec3.hpp>
 
-#include "ObjLoader.h"
+#include "ResourceLoader.h"
 #include "OpenGLHelper.h"
 #include "Logger.h"
 
