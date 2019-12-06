@@ -68,8 +68,7 @@ int main()
 	auto lamp = build_program("Lighting_Lamp");
 	auto texture_shader = build_program("Texture");
 
-	unsigned int VBO, VAO, normal;
-	unsigned int lightVAO;
+	GLuint VAO;
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> vertexNormals;
