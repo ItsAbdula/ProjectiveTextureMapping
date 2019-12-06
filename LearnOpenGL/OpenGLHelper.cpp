@@ -85,3 +85,32 @@ GLint link_program(const GLint  *shaderIDs)
 
 	return programID;
 }
+
+GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
+{
+	const GLint nVBO = VBOs.size();
+
+	GLuint VAO;
+	GLuint *VBO = new GLuint[nVBO];
+	GLuint i = 0;
+
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	for (i = 0; i < nVBO; i++)
+	{
+		glGenBuffers(1, &VBO[i]);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
+		glBufferData(GL_ARRAY_BUFFER, VBOs.at(i)->size() * sizeof(glm::vec3), &(VBOs.at(i)->front()), GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	return VAO;
+}

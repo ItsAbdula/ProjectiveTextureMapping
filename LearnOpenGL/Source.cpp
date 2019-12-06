@@ -1,10 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
@@ -70,7 +66,7 @@ int main()
 	auto cam_programID = build_program("Camera");
 	auto lighting = build_program("Lighting_Specular");
 	auto lamp = build_program("Lighting_Lamp");
-	auto texture = build_program("Texture");
+	auto texture_shader = build_program("Texture");
 
 	unsigned int VBO, VAO, normal;
 	unsigned int lightVAO;
@@ -78,40 +74,16 @@ int main()
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> vertexNormals;
 	openObj("teapot.obj", vertices, vertexNormals);
+
+	std::vector<std::vector<glm::vec3> *> VBOs;
+	VBOs.push_back(&vertices);
+	VBOs.push_back(&vertexNormals);
+	VAO = allocate_VAO(VBOs);
+
+	unsigned int textureID;
 	{
-		glGenVertexArrays(1, &VAO);
-		glBindVertexArray(VAO);
-
-		glGenBuffers(1, &VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
-
-		glGenBuffers(1, &normal);
-		glBindBuffer(GL_ARRAY_BUFFER, normal);
-		glBufferData(GL_ARRAY_BUFFER, vertexNormals.size() * sizeof(glm::vec3), &vertexNormals[0], GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, normal);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	}
-	{
-		glGenVertexArrays(1, &lightVAO);
-		glBindVertexArray(lightVAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	}
-
-	unsigned int texture1;
-	{
-		glGenTextures(1, &texture1);
-		glBindTexture(GL_TEXTURE_2D, texture1);
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -120,7 +92,7 @@ int main()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		int width, height, nrChannels;
-		// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
+
 		Image *tex = loadImage("container.jpg", &width, &height, &nrChannels);
 		if (tex != NULL && tex->getData() != NULL)
 		{
@@ -131,9 +103,9 @@ int main()
 			free(tex);
 		}
 
-		glUseProgram(texture);
+		glUseProgram(texture_shader);
 
-		glUniform1i(glGetUniformLocation(texture, "texture"), 0);
+		glUniform1i(glGetUniformLocation(texture_shader, "texture1"), 0);
 	}
 
 	while (!glfwWindowShouldClose(window))
@@ -147,8 +119,10 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glUseProgram(texture_shader);
+
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
+		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		glUseProgram(lighting);
 
@@ -158,7 +132,7 @@ int main()
 		auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 		glUniform3fv(glGetUniformLocation(lighting, "lightColor"), 1, &lightColor[0]);
 
-		glUniform3fv(glGetUniformLocation(lighting, "lightColor"), 1, &lightPos[0]);
+		glUniform3fv(glGetUniformLocation(lighting, "lightPos"), 1, &lightPos[0]);
 
 		glUniform3fv(glGetUniformLocation(lighting, "viewPos"), 1, &(camera.Position[0]));
 
