@@ -1,11 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 #include "OpenGLWrapper.h"
-#include "ResourceLoader.h"
+
 #include "Camera.h"
 
 #include "FileIO.h"
@@ -68,39 +65,11 @@ int main()
 	auto lamp = build_program("Lighting_Lamp");
 	auto texture_shader = build_program("Texture");
 
-	GLuint VAO;
+	auto mesh = load_obj("teapot.obj");
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> vertexNormals;
-	openObj("teapot.obj", vertices, vertexNormals);
-
-	std::vector<std::vector<glm::vec3> *> VBOs;
-	VBOs.push_back(&vertices);
-	VBOs.push_back(&vertexNormals);
-	VAO = allocate_VAO(VBOs);
-
-	unsigned int textureID;
+	GLuint textureID;
 	{
-		glGenTextures(1, &textureID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		int width, height, nrChannels;
-
-		Image *tex = load_Image("container.jpg", &width, &height, &nrChannels);
-		if (tex != NULL && tex->getData() != NULL)
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->getData());
-			glGenerateMipmap(GL_TEXTURE_2D);
-
-			stbi_image_free(tex->getData());
-			free(tex);
-		}
+		textureID = load_image("container.jpg");
 
 		glUseProgram(texture_shader);
 
@@ -141,15 +110,15 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		glUniformMatrix4fv(glGetUniformLocation(lighting, "view"), 1, GL_FALSE, &view[0][0]);
 
-		glBindVertexArray(VAO);
+		glBindVertexArray(mesh->get_VAO());
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -10.0f, -40.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(glGetUniformLocation(lighting, "model"), 1, GL_FALSE, &model[0][0]);
 
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glBindVertexArray(mesh->get_VAO());
+		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
 
 		// also draw the lamp object
 		glUseProgram(lamp);
@@ -163,7 +132,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(lamp, "view"), 1, GL_FALSE, &view[0][0]);
 
 		//glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

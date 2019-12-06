@@ -1,15 +1,7 @@
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-#include <glm/vec3.hpp>
-
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
 #include "ResourceLoader.h"
-#include "OpenGLWrapper.h"
-#include "Logger.h"
 
 Image::Image(int _width, int _height, int _cahnnel, unsigned char *_data)
 {
@@ -160,4 +152,10 @@ Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels
 	Image *img = new Image(*width, *height, *nrChannels, data);
 
 	return img;
+}
+
+void free_image(Image *img)
+{
+	stbi_image_free(img->getData());
+	free(img);
 }

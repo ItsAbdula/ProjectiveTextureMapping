@@ -1,8 +1,14 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
+#include <GL/glew.h>
 #include <glm/vec3.hpp>
+
+#include "Logger.h"
 
 class Image
 {
@@ -22,4 +28,5 @@ public:
 };
 
 bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexNormals);
-Image *load_Image(const std::string fileName, int *width, int *height, int *nrChannels);
+Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels);
+void free_image(Image *img);

@@ -1,8 +1,26 @@
 #include "OpenGLWrapper.h"
 #include "ShaderType.h"
+#include "ResourceLoader.h"
 
-#include "FileIO.h"
-#include "Logger.h"
+Mesh::Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs)
+{
+	nVertex = _nVertex;
+	VAO = _VAO;
+	VBOs = _VBOs;
+}
+
+GLuint Mesh::get_vertex_count()
+{
+	return nVertex;
+}
+GLuint Mesh::get_VAO()
+{
+	return VAO;
+}
+GLuint *Mesh::get_VBOs()
+{
+	return VBOs;
+}
 
 GLuint build_program(const std::string name)
 {
@@ -86,31 +104,87 @@ GLint link_program(const GLint  *shaderIDs)
 	return programID;
 }
 
-GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
+GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
 {
-	const GLuint nVBO = VBOs.size();
+	GLuint VBOIndex = 0;
 
-	GLuint VAO;
-	GLuint *VBO = new GLuint[nVBO];
-	GLuint i = 0;
+	glGenBuffers(1, &VBOIndex);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
+	glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec3), &(VBO->front()), GL_STATIC_DRAW);
 
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	for (i = 0; i < nVBO; i++)
-	{
-		glGenBuffers(1, &VBO[i]);
-		glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
-		glBufferData(GL_ARRAY_BUFFER, VBOs.at(i)->size() * sizeof(glm::vec3), &(VBOs.at(i)->front()), GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
+	glEnableVertexAttribArray(attribIndex);
+	glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return VBOIndex;
+}
+
+GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo)
+{
+	GLuint *VBOindicies = new GLuint[vertexInfo.size()];
+
+	glBindVertexArray(VAO);
+
+	for (GLuint i = 0; i < vertexInfo.size(); i++)
+	{
+		VBOindicies[i] = allocate_VBO(i, vertexInfo.at(i));
+	}
+
 	glBindVertexArray(0);
 
+	return VBOindicies;
+}
+
+GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
+{
+	GLuint VAO = 0;
+
+	glGenVertexArrays(1, &VAO);
+
 	return VAO;
+}
+
+Mesh *load_obj(const std::string fileName)
+{
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> vertexNormals;
+	openObj(fileName, vertices, vertexNormals);
+
+	std::vector<std::vector<glm::vec3> *> vertexInfo;
+	vertexInfo.push_back(&vertices);
+	vertexInfo.push_back(&vertexNormals);
+
+	auto VAO = allocate_VAO(vertexInfo);
+	auto VBOs = allocate_VBOs(VAO, vertexInfo);
+
+	Mesh *m = new Mesh(vertices.size(), VAO, VBOs);
+
+	return m;
+}
+
+GLuint load_image(const std::string fileName)
+{
+	int width, height, nrChannels;
+	GLuint textureID;
+
+	Image *tex = load_Image(fileName, &width, &height, &nrChannels);
+	if (tex != NULL && tex->getData() != NULL)
+	{
+		glGenTextures(1, &textureID);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->getData());
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	free_image(tex);
+
+	return textureID;
 }
