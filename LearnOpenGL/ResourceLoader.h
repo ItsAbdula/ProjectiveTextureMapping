@@ -4,8 +4,6 @@
 
 #include <glm/vec3.hpp>
 
-#include "OpenGLHelper.h"
-
 class Image
 {
 private:

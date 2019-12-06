@@ -88,7 +88,7 @@ GLint link_program(const GLint  *shaderIDs)
 
 GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
 {
-	const GLint nVBO = VBOs.size();
+	const GLuint nVBO = VBOs.size();
 
 	GLuint VAO;
 	GLuint *VBO = new GLuint[nVBO];

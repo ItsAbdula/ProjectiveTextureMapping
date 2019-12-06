@@ -8,7 +8,7 @@
 #include <stb_image.h>
 
 #include "ResourceLoader.h"
-#include "OpenGLHelper.h"
+#include "OpenGLWrapper.h"
 #include "Logger.h"
 
 Image::Image(int _width, int _height, int _cahnnel, unsigned char *_data)

@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "OpenGLHelper.h"
+#include "OpenGLWrapper.h"
 #include "ResourceLoader.h"
 #include "Camera.h"
 
@@ -163,7 +163,7 @@ int main()
 		model = glm::scale(model, glm::vec3(0.2f));
 		glUniformMatrix4fv(glGetUniformLocation(lamp, "view"), 1, GL_FALSE, &view[0][0]);
 
-		glBindVertexArray(lightVAO);
+		//glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 
 		glfwSwapBuffers(window);
