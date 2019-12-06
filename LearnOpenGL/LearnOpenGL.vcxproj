@@ -122,7 +122,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FileIO.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="OpenGLWrapper.cpp" />
@@ -130,7 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="FileIO.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="OpenGLWrapper.h" />

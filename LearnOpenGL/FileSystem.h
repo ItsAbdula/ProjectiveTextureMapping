@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-class FileIO
+class FileSystem
 {
 public:
 	std::string read_file(std::string path);
