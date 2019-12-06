@@ -22,4 +22,4 @@ public:
 };
 
 bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexNormals);
-Image *loadImage(const std::string fileName, int *width, int *height, int *nrChannels);
+Image *load_Image(const std::string fileName, int *width, int *height, int *nrChannels);

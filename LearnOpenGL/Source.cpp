@@ -92,7 +92,7 @@ int main()
 
 		int width, height, nrChannels;
 
-		Image *tex = loadImage("container.jpg", &width, &height, &nrChannels);
+		Image *tex = load_Image("container.jpg", &width, &height, &nrChannels);
 		if (tex != NULL && tex->getData() != NULL)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->getData());
