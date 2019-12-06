@@ -1,4 +1,4 @@
-#include "OpenGLHelper.h"
+#include "OpenGLWrapper.h"
 #include "ShaderType.h"
 
 #include "FileIO.h"

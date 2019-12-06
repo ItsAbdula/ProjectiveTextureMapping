@@ -125,7 +125,7 @@
     <ClCompile Include="FileIO.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
-    <ClCompile Include="OpenGLHelper.cpp" />
+    <ClCompile Include="OpenGLWrapper.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +133,7 @@
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ResourceLoader.h" />
-    <ClInclude Include="OpenGLHelper.h" />
+    <ClInclude Include="OpenGLWrapper.h" />
     <ClInclude Include="ShaderType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
