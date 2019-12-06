@@ -2,11 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "OpenGLWrapper.h"
-
 #include "Camera.h"
-
-#include "FileIO.h"
-#include "Logger.h"
 
 #define WIDTH 800
 #define HEIGHT 600
