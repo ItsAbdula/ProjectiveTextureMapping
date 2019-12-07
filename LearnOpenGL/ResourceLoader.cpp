@@ -26,6 +26,11 @@ unsigned char *Image::getData()
 	return data;
 }
 
+std::string get_extension(const std::string &filePath)
+{
+	return filePath.substr(filePath.find_last_of(".") + 1);
+}
+
 bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexNormals)
 {
 	vertices.clear();
