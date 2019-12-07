@@ -96,17 +96,17 @@ int main()
 		set_uniform_value(lighting, "viewPos", camera.Position);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glUniformMatrix4fv(glGetUniformLocation(lighting, "projection"), 1, GL_FALSE, &projection[0][0]);
+		set_uniform_value(lighting, "projection", projection);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		glUniformMatrix4fv(glGetUniformLocation(lighting, "view"), 1, GL_FALSE, &view[0][0]);
+		set_uniform_value(lighting, "view", view);
 
 		glBindVertexArray(mesh->get_VAO());
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -10.0f, -40.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(glGetUniformLocation(lighting, "model"), 1, GL_FALSE, &model[0][0]);
+		set_uniform_value(lighting, "model", model);
 
 		glBindVertexArray(mesh->get_VAO());
 		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
@@ -114,13 +114,13 @@ int main()
 		// also draw the lamp object
 		glUseProgram(lamp);
 
-		glUniformMatrix4fv(glGetUniformLocation(lamp, "projection"), 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(lamp, "view"), 1, GL_FALSE, &view[0][0]);
+		set_uniform_value(lamp, "projection", projection);
+		set_uniform_value(lamp, "view", view);
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f));
-		glUniformMatrix4fv(glGetUniformLocation(lamp, "view"), 1, GL_FALSE, &view[0][0]);
+		set_uniform_value(lamp, "view", view);
 
 		//glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());

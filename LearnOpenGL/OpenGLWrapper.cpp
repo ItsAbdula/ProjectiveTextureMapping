@@ -145,6 +145,12 @@ void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 &value)
 	glUniform4iv(uniform, 1, &value.x);
 }
 
+void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniformMatrix4fv(uniform, 1, GL_FALSE, &value[0][0]);
+}
+
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
 {
 	GLuint VBOIndex = 0;
