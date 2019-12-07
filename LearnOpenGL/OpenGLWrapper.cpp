@@ -22,6 +22,15 @@ GLuint *Mesh::get_VBOs()
 	return VBOs;
 }
 
+void draw_mesh(Mesh &mesh)
+{
+	glBindVertexArray(mesh.get_VAO());
+
+	glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertex_count());
+
+	glBindVertexArray(0);
+}
+
 GLuint build_program(const std::string name)
 {
 	std::string shaderSources[5];

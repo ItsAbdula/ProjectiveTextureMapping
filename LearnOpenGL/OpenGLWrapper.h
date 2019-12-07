@@ -19,10 +19,13 @@ private:
 
 public:
 	Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs);
+
 	GLuint get_vertex_count();
 	GLuint get_VAO();
 	GLuint *get_VBOs();
 };
+
+void draw_mesh(Mesh &mesh);
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);

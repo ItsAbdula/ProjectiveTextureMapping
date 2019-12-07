@@ -58,7 +58,8 @@ int main()
 	auto lamp = build_program("Lighting_Lamp");
 	auto texture_shader = build_program("Texture");
 
-	auto mesh = make_mesh("teapot.model");
+	auto teapot = make_mesh("teapot.model");
+	auto cube = make_mesh("cube.model");
 
 	GLuint textureID;
 	{
@@ -109,13 +110,34 @@ int main()
 			model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			set_uniform_value(lighting, "model", model);
 
-			{
-				glBindVertexArray(mesh->get_VAO());
+			draw_mesh(*teapot);
 
-				glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
+			glUseProgram(0);
+		}
+		{
+			glUseProgram(lighting);
 
-				glBindVertexArray(0);
-			}
+			auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+			set_uniform_value(lighting, "objectColor", objectColor);
+
+			auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+			set_uniform_value(lighting, "lightColor", lightColor);
+			set_uniform_value(lighting, "lightPos", lightPos);
+			set_uniform_value(lighting, "viewPos", camera.Position);
+
+			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			set_uniform_value(lighting, "projection", projection);
+
+			glm::mat4 view = camera.GetViewMatrix();
+			set_uniform_value(lighting, "view", view);
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, -10.0f, -40.0f));
+			model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(10, 10, 1));
+			set_uniform_value(lighting, "model", model);
+
+			draw_mesh(*cube);
 
 			glUseProgram(0);
 		}
