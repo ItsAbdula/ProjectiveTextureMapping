@@ -49,7 +49,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 	int charPos = 0;
 	while (std::getline(ifs, line))
 	{
-		if (line[0] == '\n' || line[0] == '#' || line[0] == '!' || line[0] == '$') continue;
+		if (line[0] == NULL || line[0] == '\n' || line[0] == '#' || line[0] == '!' || line[0] == '$') continue;
 
 		sscanf_s(line.c_str(), "%s", op, sizeof(op));
 
