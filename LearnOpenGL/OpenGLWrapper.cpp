@@ -197,7 +197,7 @@ Mesh *make_mesh(const std::string fileName)
 	std::vector<glm::vec3> vertexNormals;
 
 	const std::string ext = get_extension(fileName);
-	if (ext.compare("obj") == 0)
+	if (ext.compare("model") == 0)
 	{
 		openObj(fileName, vertices, vertexNormals);
 	}
