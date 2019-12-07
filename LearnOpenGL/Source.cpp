@@ -88,14 +88,12 @@ int main()
 		glUseProgram(lighting);
 
 		auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-		glUniform3fv(glGetUniformLocation(lighting, "objectColor"), 1, &objectColor[0]);
+		set_uniform_value(lighting, "objectColor", objectColor);
 
 		auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		glUniform3fv(glGetUniformLocation(lighting, "lightColor"), 1, &lightColor[0]);
-
-		glUniform3fv(glGetUniformLocation(lighting, "lightPos"), 1, &lightPos[0]);
-
-		glUniform3fv(glGetUniformLocation(lighting, "viewPos"), 1, &(camera.Position[0]));
+		set_uniform_value(lighting, "lightColor", lightColor);
+		set_uniform_value(lighting, "lightPos", lightPos);
+		set_uniform_value(lighting, "viewPos", camera.Position);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glUniformMatrix4fv(glGetUniformLocation(lighting, "projection"), 1, GL_FALSE, &projection[0][0]);

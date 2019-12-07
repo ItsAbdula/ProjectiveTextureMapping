@@ -104,6 +104,12 @@ GLint link_program(const GLint  *shaderIDs)
 	return programID;
 }
 
+void set_uniform_value(GLuint &prog, const char *name, glm::vec3 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform3fv(uniform, 1, &value[0]);
+}
+
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
 {
 	GLuint VBOIndex = 0;

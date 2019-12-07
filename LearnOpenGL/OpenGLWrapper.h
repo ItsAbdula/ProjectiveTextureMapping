@@ -27,6 +27,7 @@ public:
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);
 GLuint build_program(const std::string name);
+void set_uniform_value(GLuint &prog, const char *name, glm::vec3 &value);
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
 GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
 GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs);
