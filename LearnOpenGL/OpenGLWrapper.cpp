@@ -145,11 +145,20 @@ GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
 	return VAO;
 }
 
-Mesh *load_obj(const std::string fileName)
+Mesh *make_mesh(const std::string fileName)
 {
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> vertexNormals;
-	openObj(fileName, vertices, vertexNormals);
+
+	const std::string ext = get_extension(fileName);
+	if (ext.compare("obj") == 0)
+	{
+		openObj(fileName, vertices, vertexNormals);
+	}
+	else
+	{
+		std::cout << "Can't Open " + fileName + " Extension." << std::endl;
+	}
 
 	std::vector<std::vector<glm::vec3> *> vertexInfo;
 	vertexInfo.push_back(&vertices);

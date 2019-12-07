@@ -30,5 +30,5 @@ GLuint build_program(const std::string name);
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
 GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
 GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs);
-Mesh *load_obj(const std::string fileName);
+Mesh *make_mesh(const std::string fileName);
 GLuint load_image(const std::string fileName);
