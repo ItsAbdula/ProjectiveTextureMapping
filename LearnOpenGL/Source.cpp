@@ -80,50 +80,45 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(texture_shader);
+		{
+			glUseProgram(texture_shader);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+		}
 
-		glUseProgram(lighting);
+		{
+			glUseProgram(lighting);
 
-		auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-		set_uniform_value(lighting, "objectColor", objectColor);
+			auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+			set_uniform_value(lighting, "objectColor", objectColor);
 
-		auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		set_uniform_value(lighting, "lightColor", lightColor);
-		set_uniform_value(lighting, "lightPos", lightPos);
-		set_uniform_value(lighting, "viewPos", camera.Position);
+			auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+			set_uniform_value(lighting, "lightColor", lightColor);
+			set_uniform_value(lighting, "lightPos", lightPos);
+			set_uniform_value(lighting, "viewPos", camera.Position);
 
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		set_uniform_value(lighting, "projection", projection);
+			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			set_uniform_value(lighting, "projection", projection);
 
-		glm::mat4 view = camera.GetViewMatrix();
-		set_uniform_value(lighting, "view", view);
+			glm::mat4 view = camera.GetViewMatrix();
+			set_uniform_value(lighting, "view", view);
 
-		glBindVertexArray(mesh->get_VAO());
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, -10.0f, -40.0f));
+			model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			set_uniform_value(lighting, "model", model);
 
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -10.0f, -40.0f));
-		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		set_uniform_value(lighting, "model", model);
+			{
+				glBindVertexArray(mesh->get_VAO());
 
-		glBindVertexArray(mesh->get_VAO());
-		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
+				glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
 
-		// also draw the lamp object
-		glUseProgram(lamp);
+				glBindVertexArray(0);
+			}
 
-		set_uniform_value(lamp, "projection", projection);
-		set_uniform_value(lamp, "view", view);
-
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f));
-		set_uniform_value(lamp, "view", view);
-
-		//glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
+			glUseProgram(0);
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
