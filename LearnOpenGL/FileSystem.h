@@ -8,10 +8,9 @@
 class FileSystem
 {
 public:
-	std::string read_file(std::string path);
-	void write_file(std::string path, std::string contents);
+	static std::string read_file(const std::string path);
+	static void write_file(const std::string path, const std::string contents);
 
 private:
-	std::ifstream inputStream;
-	std::ofstream outputStream;
+	FileSystem() {}
 };

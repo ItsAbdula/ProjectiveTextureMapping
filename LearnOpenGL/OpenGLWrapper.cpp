@@ -24,10 +24,9 @@ GLuint *Mesh::get_VBOs()
 
 GLuint build_program(const std::string name)
 {
-	FileSystem fs;
 	std::string shaderSources[5];
-	shaderSources[0] = fs.read_file("../Shaders/" + name + "/" + name + ".vert");
-	shaderSources[1] = fs.read_file("../Shaders/" + name + "/" + name + ".frag");
+	shaderSources[0] = FileSystem::read_file("../Shaders/" + name + "/" + name + ".vert");
+	shaderSources[1] = FileSystem::read_file("../Shaders/" + name + "/" + name + ".frag");
 
 	std::vector<GLint> shaderIDs;
 	compile_shaders(&shaderIDs, shaderSources);

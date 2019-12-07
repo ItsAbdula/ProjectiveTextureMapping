@@ -1,7 +1,9 @@
 #include "FileSystem.h"
 
-std::string FileSystem::read_file(std::string path)
+std::string FileSystem::read_file(const std::string path)
 {
+	std::ifstream inputStream;
+
 	inputStream.open(path);
 	if (inputStream.is_open() == false)
 	{
@@ -17,8 +19,10 @@ std::string FileSystem::read_file(std::string path)
 	return contents;
 }
 
-void FileSystem::write_file(std::string path, std::string contents)
+void FileSystem::write_file(const std::string path, const std::string contents)
 {
+	std::ofstream outputStream;
+
 	outputStream.open(path);
 	if (outputStream.is_open() == false)
 	{
