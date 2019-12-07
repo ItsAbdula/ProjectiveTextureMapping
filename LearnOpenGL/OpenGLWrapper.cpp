@@ -83,7 +83,7 @@ GLint compile_shader(const GLint shaderType, const std::string *shaderSource)
 	return shaderID;
 }
 
-GLint link_program(const GLint  *shaderIDs)
+GLint link_program(const GLint *shaderIDs)
 {
 	auto programID = glCreateProgram();
 	glAttachShader(programID, shaderIDs[0]);
@@ -104,10 +104,45 @@ GLint link_program(const GLint  *shaderIDs)
 	return programID;
 }
 
+void set_uniform_value(GLuint &prog, const char *name, glm::vec1 value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform1fv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::ivec1 value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform1iv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::vec2 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform2fv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::ivec2 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform2iv(uniform, 1, &value.x);
+}
 void set_uniform_value(GLuint &prog, const char *name, glm::vec3 &value)
 {
 	auto uniform = glGetUniformLocation(prog, name);
-	glUniform3fv(uniform, 1, &value[0]);
+	glUniform3fv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::ivec3 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform3iv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::vec4 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform4fv(uniform, 1, &value.x);
+}
+void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 &value)
+{
+	auto uniform = glGetUniformLocation(prog, name);
+	glUniform4iv(uniform, 1, &value.x);
 }
 
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)

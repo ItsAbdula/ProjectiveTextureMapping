@@ -66,7 +66,7 @@ int main()
 
 		glUseProgram(texture_shader);
 
-		glUniform1i(glGetUniformLocation(texture_shader, "texture1"), 0);
+		set_uniform_value(texture_shader, "texture1", glm::ivec1(0));
 	}
 
 	while (!glfwWindowShouldClose(window))
