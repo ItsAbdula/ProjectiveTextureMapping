@@ -31,17 +31,18 @@ std::string get_extension(const std::string &filePath)
 	return filePath.substr(filePath.find_last_of(".") + 1);
 }
 
-bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexNormals)
+bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexTexCoord, std::vector<glm::vec3> &vertexNormals)
 {
 	vertices.clear();
+	vertexTexCoord.clear();
 	vertexNormals.clear();
 
 	std::ifstream ifs;
 	std::string line;
 
 	char op[3];
-	glm::vec3 pos;
 	std::vector<glm::vec3> vertexIndices;
+	std::vector<glm::vec3> vertexTexCoordIndices;
 	std::vector<glm::vec3> vertexNormalIndices;
 
 	ifs.open("../Models/" + fileName);
@@ -53,8 +54,6 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 
 		sscanf_s(line.c_str(), "%s", op, sizeof(op));
 
-		pos.x = 0; pos.y = 0; pos.z = 0;
-
 		charPos = 0;
 		if ((charPos = line.find(' ')) != std::string::npos)
 		{
@@ -63,23 +62,28 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 
 		if (strcmp(op, "v") == false)
 		{
+			glm::vec3 pos = { 0,0,0 };
 			sscanf_s(line.c_str(), "%f %f %f", &pos.x, &pos.y, &pos.z);
 			vertexIndices.push_back(pos);
 		}
 		else if (strcmp(op, "vn") == false)
 		{
+			glm::vec3 pos = { 0,0,0 };
 			sscanf_s(line.c_str(), "%f %f %f", &pos.x, &pos.y, &pos.z);
 			vertexNormalIndices.push_back(pos);
 		}
 		else if (strcmp(op, "vt") == false)
 		{
-			// TODO : texCoord
+			glm::vec3 pos = { 0,0,0 };
+			sscanf_s(line.c_str(), "%f %f", &pos.x, &pos.y);
+			vertexTexCoordIndices.push_back(pos);
 		}
 
 		if (strncmp(op, "f", 1) == false)
 		{
 			int vIndex = 0, uvIndex = 0, vnIndex = 0;
 			std::vector<int> faceVertexIndicies;
+			std::vector<int> faceVertexTexCoordIndicies;
 			std::vector<int> faceVertexNormalIndicies;
 
 			charPos = 0;
@@ -88,7 +92,14 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 				sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-/]%d%*[-/]%d", &vIndex, &uvIndex, &vnIndex);
 				line.erase(0, charPos + 1);
 
-				faceVertexIndicies.push_back(vIndex - 1);
+				if (vIndex >= 1)
+				{
+					faceVertexIndicies.push_back(vIndex - 1);
+				}
+				if (uvIndex >= 1)
+				{
+					faceVertexTexCoordIndicies.push_back(uvIndex - 1);
+				}
 				if (vnIndex >= 1)
 				{
 					faceVertexNormalIndicies.push_back(vnIndex - 1);
@@ -114,7 +125,29 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 			else
 			{
 				GLchar infoLog[512] = { 0, };
-				log_warn(infoLog, "faceVertexIndices.size() : " + std::to_string(faceVertexIndicies.size()));
+				log_warn(infoLog, fileName + " : " + "faceVertexIndices.size() : " + std::to_string(faceVertexIndicies.size()));
+			}
+
+			if (faceVertexTexCoordIndicies.size() == 3)
+			{
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+			}
+			else if (faceVertexTexCoordIndicies.size() == 4)
+			{
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[3]]);
+			}
+			else
+			{
+				GLchar infoLog[512] = { 0, };
+				log_warn(infoLog, fileName + " : " + "vertexTexCoordIndices.size() : " + std::to_string(faceVertexTexCoordIndicies.size()));
 			}
 
 			if (faceVertexNormalIndicies.size() == 3)
@@ -136,7 +169,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 			else
 			{
 				GLchar infoLog[512] = { 0, };
-				log_warn(infoLog, "faceVertexNormalIndices.size() : " + std::to_string(faceVertexNormalIndicies.size()));
+				log_warn(infoLog, fileName + " : " + "faceVertexNormalIndices.size() : " + std::to_string(faceVertexNormalIndicies.size()));
 			}
 		}
 	}

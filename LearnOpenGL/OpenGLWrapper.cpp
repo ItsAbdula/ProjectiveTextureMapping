@@ -320,12 +320,13 @@ GLuint allocate_VAO()
 Mesh *make_mesh(const std::string fileName)
 {
 	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> vertexTexCoord;
 	std::vector<glm::vec3> vertexNormals;
 
 	const std::string ext = get_extension(fileName);
 	if (ext.compare("obj") == 0)
 	{
-		openObj(fileName, vertices, vertexNormals);
+		openObj(fileName, vertices, vertexTexCoord, vertexNormals);
 	}
 	else
 	{
@@ -334,6 +335,10 @@ Mesh *make_mesh(const std::string fileName)
 
 	std::vector<std::vector<glm::vec3> *> vertexInfo;
 	vertexInfo.push_back(&vertices);
+	if (vertexTexCoord.size() > 0)
+	{
+		vertexInfo.push_back(&vertexTexCoord);
+	}
 	if (vertexNormals.size() > 0)
 	{
 		vertexInfo.push_back(&vertexNormals);
