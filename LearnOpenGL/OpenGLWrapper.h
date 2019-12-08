@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Camera.h"
 #include "FileSystem.h"
 #include "Logger.h"
 
@@ -24,8 +25,42 @@ public:
 	GLuint get_VAO();
 	GLuint *get_VBOs();
 };
-
 void draw_mesh(Mesh &mesh);
+
+class RenderObject
+{
+private:
+	GLuint id;
+	GLuint prog;
+	Mesh *mesh;
+	glm::mat4 model;
+
+	glm::vec3 translate;
+	glm::vec3 rotate;
+	glm::vec3 scale;
+
+	void update_model_matrix();
+
+public:
+	RenderObject(Mesh * _mesh);
+
+	GLuint get_programs();
+	GLuint get_vertex_count();
+	glm::mat4 get_model_matrix();
+
+	void set_translate(glm::vec3 _translate);
+	void set_rotate(glm::vec3 _rotate);
+	void set_scale(glm::vec3 _scale);
+
+	void move(glm::vec3 _delta);
+	void move(glm::vec3 _direction, glm::vec1 _velocity);
+
+	void set_program(GLuint _prog);
+
+	void render(Camera &camera);
+};
+
+RenderObject *make_render_object(Mesh *mesh);
 
 GLint compile_shader(const GLint shaderType, const std::string *shaderSource);
 void compile_shaders(std::vector<GLint> *shaderIDs, const std::string *shaderSources);

@@ -2,6 +2,13 @@
 #include "ShaderType.h"
 #include "ResourceLoader.h"
 
+// settings
+const unsigned int _SCR_WIDTH = 800;
+const unsigned int _SCR_HEIGHT = 600;
+
+// lighting
+glm::vec3 _lightPos(1.2f, 20.0f, 2.0f);
+
 Mesh::Mesh(GLuint _nVertex, GLuint _VAO, GLuint *_VBOs)
 {
 	nVertex = _nVertex;
@@ -30,6 +37,116 @@ void draw_mesh(Mesh &mesh)
 
 	glBindVertexArray(0);
 }
+
+RenderObject::RenderObject(Mesh * _mesh)
+{
+	translate = glm::vec3(0.0f, 0.0f, 0.0f);
+	rotate = glm::vec3(0.0f, 0.0f, 0.0f);
+	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	mesh = _mesh;
+
+	update_model_matrix();
+}
+
+GLuint RenderObject::get_programs()
+{
+	return prog;
+}
+
+GLuint RenderObject::get_vertex_count()
+{
+	return mesh->get_vertex_count();
+}
+
+glm::mat4 RenderObject::get_model_matrix()
+{
+	return model;
+}
+
+void RenderObject::update_model_matrix()
+{
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, translate);
+
+	model = glm::rotate(model, glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	model = glm::scale(model, scale);
+}
+
+void RenderObject::set_translate(glm::vec3 _translate)
+{
+	translate = _translate;
+
+	update_model_matrix();
+}
+
+void RenderObject::set_rotate(glm::vec3 _rotate)
+{
+	rotate = _rotate;
+
+	update_model_matrix();
+}
+
+void RenderObject::set_scale(glm::vec3 _scale)
+{
+	scale = _scale;
+
+	update_model_matrix();
+}
+
+void RenderObject::move(glm::vec3 _delta)
+{
+	translate += _delta;
+
+	update_model_matrix();
+}
+
+void RenderObject::move(glm::vec3 _direction, glm::vec1 _velocity)
+{
+	translate += glm::vec3(_velocity *_direction.x, _velocity *_direction.y, _velocity *_direction.z);
+
+	update_model_matrix();
+}
+
+void RenderObject::set_program(GLuint _prog)
+{
+	prog = _prog;
+}
+
+void RenderObject::render(Camera &camera)
+{
+	glUseProgram(prog);
+
+	auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	set_uniform_value(prog, "objectColor", objectColor);
+
+	auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	set_uniform_value(prog, "lightColor", lightColor);
+	set_uniform_value(prog, "lightPos", _lightPos);
+	set_uniform_value(prog, "viewPos", camera.Position);
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
+	set_uniform_value(prog, "projection", projection);
+
+	glm::mat4 view = camera.GetViewMatrix();
+	set_uniform_value(prog, "view", view);
+
+	set_uniform_value(prog, "model", model);
+
+	draw_mesh(*mesh);
+
+	glUseProgram(0);
+}
+
+RenderObject *make_render_object(Mesh *mesh)
+{
+	RenderObject *ro = new RenderObject{ mesh };
+
+	return ro;
+};
 
 GLuint build_program(const std::string name)
 {
