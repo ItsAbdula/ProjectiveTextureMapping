@@ -58,9 +58,9 @@ int main()
 	auto lamp = build_program("Lighting_Lamp");
 	auto texture_shader = build_program("Texture");
 
-	auto teapot = make_mesh("teapot.model");
-	auto cube = make_mesh("cube.model");
-	auto plane = make_mesh("plane.model");
+	auto teapot = make_mesh("teapot.obj");
+	auto cube = make_mesh("cube.obj");
+	auto plane = make_mesh("plane.obj");
 
 	GLuint textureID;
 	{
