@@ -89,7 +89,10 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 				line.erase(0, charPos + 1);
 
 				faceVertexIndicies.push_back(vIndex - 1);
-				faceVertexNormalIndicies.push_back(vnIndex - 1);
+				if (vnIndex >= 1)
+				{
+					faceVertexNormalIndicies.push_back(vnIndex - 1);
+				}
 			}
 
 			if (faceVertexIndicies.size() == 3)
