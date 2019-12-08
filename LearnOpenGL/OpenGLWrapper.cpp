@@ -191,7 +191,7 @@ GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexI
 	return VBOindicies;
 }
 
-GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs)
+GLuint allocate_VAO()
 {
 	GLuint VAO = 0;
 
@@ -217,9 +217,12 @@ Mesh *make_mesh(const std::string fileName)
 
 	std::vector<std::vector<glm::vec3> *> vertexInfo;
 	vertexInfo.push_back(&vertices);
-	vertexInfo.push_back(&vertexNormals);
+	if (vertexNormals.size() > 0)
+	{
+		vertexInfo.push_back(&vertexNormals);
+	}
 
-	auto VAO = allocate_VAO(vertexInfo);
+	auto VAO = allocate_VAO();
 	auto VBOs = allocate_VBOs(VAO, vertexInfo);
 
 	Mesh *m = new Mesh(vertices.size(), VAO, VBOs);

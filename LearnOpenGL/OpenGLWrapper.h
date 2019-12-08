@@ -44,6 +44,6 @@ void set_uniform_value(GLuint &prog, const char *name, glm::mat4 &value);
 
 GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
 GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
-GLuint allocate_VAO(std::vector<std::vector<glm::vec3> *> &VBOs);
+GLuint allocate_VAO();
 Mesh *make_mesh(const std::string fileName);
 GLuint load_image(const std::string fileName);
