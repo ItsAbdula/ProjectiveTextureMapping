@@ -55,9 +55,17 @@ int main()
 	auto cam_programID = build_program("Camera");
 	auto lighting = build_program("Lighting_Specular");
 	auto lamp = build_program("Lighting_Lamp");
+	auto lightmap = build_program("Lighting_Maps");
 	auto texture_shader = build_program("Texture");
 
 	auto cube = make_mesh("cube.obj");
+
+	auto black = load_image("black.png");
+	auto magenta = load_image("magenta.png");
+	auto orange = load_image("orange.png");
+	auto white = load_image("white.png");
+
+	auto defaultMaterial = new Material(lightmap, orange, white);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -65,7 +73,7 @@ int main()
 		teapot->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
 	}
 	{
-		teapot->set_program(lighting);
+		teapot->set_material(defaultMaterial);
 	}
 
 	auto cube1 = make_render_object(cube);
@@ -75,7 +83,7 @@ int main()
 		cube1->set_scale(glm::vec3(10, 10, 4));
 	}
 	{
-		cube1->set_program(lighting);
+		cube1->set_material(defaultMaterial);
 	}
 
 	auto cube2 = make_render_object(cube);
@@ -85,7 +93,7 @@ int main()
 		cube2->set_scale(glm::vec3(12, 12, 1));
 	}
 	{
-		cube2->set_program(lighting);
+		cube2->set_material(defaultMaterial);
 	}
 
 	auto plane = make_render_object(make_mesh("plane.obj"));
@@ -93,7 +101,7 @@ int main()
 		plane->set_scale(glm::vec3(10, 10, 1));
 	}
 	{
-		plane->set_program(lighting);
+		plane->set_material(defaultMaterial);
 	}
 
 	auto cube3 = make_render_object(cube);
@@ -103,16 +111,7 @@ int main()
 		cube3->set_scale(glm::vec3(50, 50, 0.5));
 	}
 	{
-		cube3->set_program(lighting);
-	}
-
-	GLuint textureID;
-	{
-		textureID = load_image("container.jpg");
-
-		glUseProgram(texture_shader);
-
-		set_uniform_value(texture_shader, "texture1", glm::ivec1(0));
+		cube3->set_material(defaultMaterial);
 	}
 
 	while (!glfwWindowShouldClose(window))
@@ -127,19 +126,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		{
-			glUseProgram(texture_shader);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, textureID);
-
-			glUseProgram(0);
+			teapot->render(camera);
+			cube1->render(camera);
+			cube2->render(camera);
+			cube3->render(camera);
+			plane->render(camera);
 		}
-
-		teapot->render(camera);
-		cube1->render(camera);
-		cube2->render(camera);
-		cube3->render(camera);
-		plane->render(camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

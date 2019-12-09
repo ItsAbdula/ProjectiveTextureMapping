@@ -38,6 +38,27 @@ void draw_mesh(Mesh &mesh)
 	glBindVertexArray(0);
 }
 
+Material::Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap)
+{
+	prog = _prog;
+
+	diffuseMap = _diffuseMap;
+	specularMap = _specularMap;
+}
+
+GLuint Material::get_program()
+{
+	return prog;
+}
+GLuint Material::get_diffuseMap()
+{
+	return diffuseMap;
+}
+GLuint Material::get_specularMap()
+{
+	return specularMap;
+}
+
 RenderObject::RenderObject(Mesh * _mesh)
 {
 	translate = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -49,9 +70,9 @@ RenderObject::RenderObject(Mesh * _mesh)
 	update_model_matrix();
 }
 
-GLuint RenderObject::get_programs()
+Material *RenderObject::get_material()
 {
-	return prog;
+	return material;
 }
 
 GLuint RenderObject::get_vertex_count()
@@ -111,30 +132,43 @@ void RenderObject::move(glm::vec3 _direction, glm::vec1 _velocity)
 	update_model_matrix();
 }
 
-void RenderObject::set_program(GLuint _prog)
+void RenderObject::set_material(Material *_material)
 {
-	prog = _prog;
+	material = _material;
 }
 
 void RenderObject::render(Camera &camera)
 {
+	auto prog = material->get_program();
 	glUseProgram(prog);
 
-	auto objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-	set_uniform_value(prog, "objectColor", objectColor);
-
-	auto lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-	set_uniform_value(prog, "lightColor", lightColor);
-	set_uniform_value(prog, "lightPos", _lightPos);
+	set_uniform_value(prog, "light.position", _lightPos);
 	set_uniform_value(prog, "viewPos", camera.Position);
 
+	glm::vec3 a = { 0.2f, 0.2f, 0.2f };
+	glm::vec3 d = { 0.5f, 0.5f, 0.5f };
+	glm::vec3 f = { 1.0f, 1.0f, 1.0f };
+	set_uniform_value(prog, "light.ambient", a);
+	set_uniform_value(prog, "light.diffuse", d);
+	set_uniform_value(prog, "light.specular", f);
+
+	set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
+
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
-	set_uniform_value(prog, "projection", projection);
-
 	glm::mat4 view = camera.GetViewMatrix();
+	set_uniform_value(prog, "projection", projection);
 	set_uniform_value(prog, "view", view);
-
 	set_uniform_value(prog, "model", model);
+
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
+	}
+
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+	}
 
 	draw_mesh(*mesh);
 
@@ -143,7 +177,7 @@ void RenderObject::render(Camera &camera)
 
 RenderObject *make_render_object(Mesh *mesh)
 {
-	RenderObject *ro = new RenderObject{ mesh };
+	RenderObject *ro = new RenderObject(mesh);
 
 	return ro;
 };
@@ -320,12 +354,13 @@ GLuint allocate_VAO()
 Mesh *make_mesh(const std::string fileName)
 {
 	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> vertexTexCoord;
 	std::vector<glm::vec3> vertexNormals;
 
 	const std::string ext = get_extension(fileName);
 	if (ext.compare("obj") == 0)
 	{
-		openObj(fileName, vertices, vertexNormals);
+		openObj(fileName, vertices, vertexTexCoord, vertexNormals);
 	}
 	else
 	{
@@ -334,6 +369,10 @@ Mesh *make_mesh(const std::string fileName)
 
 	std::vector<std::vector<glm::vec3> *> vertexInfo;
 	vertexInfo.push_back(&vertices);
+	if (vertexTexCoord.size() > 0)
+	{
+		vertexInfo.push_back(&vertexTexCoord);
+	}
 	if (vertexNormals.size() > 0)
 	{
 		vertexInfo.push_back(&vertexNormals);
