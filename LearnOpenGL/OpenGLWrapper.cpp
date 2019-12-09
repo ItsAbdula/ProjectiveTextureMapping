@@ -145,7 +145,6 @@ void RenderObject::render(Camera &camera)
 	set_uniform_value(prog, "light.position", _lightPos);
 	set_uniform_value(prog, "viewPos", camera.Position);
 
-	// light properties
 	glm::vec3 a = { 0.2f, 0.2f, 0.2f };
 	glm::vec3 d = { 0.5f, 0.5f, 0.5f };
 	glm::vec3 f = { 1.0f, 1.0f, 1.0f };
@@ -153,22 +152,19 @@ void RenderObject::render(Camera &camera)
 	set_uniform_value(prog, "light.diffuse", d);
 	set_uniform_value(prog, "light.specular", f);
 
-	// material properties
 	set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
 
-	// view/projection transformations
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	set_uniform_value(prog, "projection", projection);
 	set_uniform_value(prog, "view", view);
 	set_uniform_value(prog, "model", model);
 
-	// bind diffuse map
 	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
 	}
-	// bind specular map
+
 	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, material->get_specularMap());

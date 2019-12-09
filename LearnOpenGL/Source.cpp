@@ -114,17 +114,6 @@ int main()
 		cube3->set_material(defaultMaterial);
 	}
 
-	GLuint diffuseMap = load_image("container2.png");
-	GLuint specularMap = load_image("container2_specular.png");
-	{
-		glUseProgram(lightmap);
-
-		set_uniform_value(lightmap, "material.diffuse", glm::ivec1(0));
-		set_uniform_value(lightmap, "material.specular", glm::ivec1(1));
-
-		glUseProgram(lightmap);
-	}
-
 	while (!glfwWindowShouldClose(window))
 	{
 		double currentFrame = glfwGetTime();
@@ -137,19 +126,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		{
-			glUseProgram(texture_shader);
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
-			glUseProgram(0);
+			teapot->render(camera);
+			cube1->render(camera);
+			cube2->render(camera);
+			cube3->render(camera);
+			plane->render(camera);
 		}
-
-		teapot->render(camera);
-		cube1->render(camera);
-		cube2->render(camera);
-		cube3->render(camera);
-		plane->render(camera);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
