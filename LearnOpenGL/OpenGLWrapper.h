@@ -49,8 +49,10 @@ class RenderObject
 {
 private:
 	GLuint id;
-	GLuint prog;
+
 	Mesh *mesh;
+	Material *material;
+
 	glm::mat4 model;
 
 	glm::vec3 translate;
@@ -62,7 +64,7 @@ private:
 public:
 	RenderObject(Mesh * _mesh);
 
-	GLuint get_programs();
+	Material *get_material();
 	GLuint get_vertex_count();
 	glm::mat4 get_model_matrix();
 
@@ -73,7 +75,7 @@ public:
 	void move(glm::vec3 _delta);
 	void move(glm::vec3 _direction, glm::vec1 _velocity);
 
-	void set_program(GLuint _prog);
+	void set_material(Material *_material);
 
 	void render(Camera &camera);
 };
