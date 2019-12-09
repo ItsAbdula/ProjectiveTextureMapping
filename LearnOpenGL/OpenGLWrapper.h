@@ -27,6 +27,24 @@ public:
 };
 void draw_mesh(Mesh &mesh);
 
+class Material
+{
+private:
+	GLuint prog;
+
+	GLuint diffuseMap;
+	GLuint specularMap;
+	GLuint ambientMap;
+
+public:
+	Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap);
+
+	GLuint get_program();
+
+	GLuint get_diffuseMap();
+	GLuint get_specularMap();
+};
+
 class RenderObject
 {
 private:

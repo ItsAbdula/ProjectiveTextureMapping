@@ -38,6 +38,27 @@ void draw_mesh(Mesh &mesh)
 	glBindVertexArray(0);
 }
 
+Material::Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap)
+{
+	prog = _prog;
+
+	diffuseMap = _diffuseMap;
+	specularMap = _specularMap;
+}
+
+GLuint Material::get_program()
+{
+	return prog;
+}
+GLuint Material::get_diffuseMap()
+{
+	return diffuseMap;
+}
+GLuint Material::get_specularMap()
+{
+	return specularMap;
+}
+
 RenderObject::RenderObject(Mesh * _mesh)
 {
 	translate = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -48,7 +69,6 @@ RenderObject::RenderObject(Mesh * _mesh)
 
 	update_model_matrix();
 }
-
 GLuint RenderObject::get_programs()
 {
 	return prog;
@@ -143,7 +163,7 @@ void RenderObject::render(Camera &camera)
 
 RenderObject *make_render_object(Mesh *mesh)
 {
-	RenderObject *ro = new RenderObject{ mesh };
+	RenderObject *ro = new RenderObject(mesh);
 
 	return ro;
 };
