@@ -64,8 +64,13 @@ int main()
 	auto magenta = load_image("magenta.png");
 	auto orange = load_image("orange.png");
 	auto white = load_image("white.png");
+	auto transparent = load_image("transparent.png");
 
-	auto defaultMaterial = new Material(lightmap, orange, white);
+	auto container_diffuse = load_image("container2.png");
+	auto container_specular = load_image("container2_specular.png");
+
+	auto defaultMaterial = new Material(lightmap, orange, transparent);
+	auto planeMaterial = new Material(texture_shader, container_diffuse, transparent);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -101,7 +106,7 @@ int main()
 		plane->set_scale(glm::vec3(10, 10, 1));
 	}
 	{
-		plane->set_material(defaultMaterial);
+		plane->set_material(planeMaterial);
 	}
 
 	auto cube3 = make_render_object(cube);
@@ -130,7 +135,7 @@ int main()
 			cube1->render(camera);
 			cube2->render(camera);
 			cube3->render(camera);
-			plane->render(camera);
+			//plane->render(camera);
 		}
 
 		glfwSwapBuffers(window);

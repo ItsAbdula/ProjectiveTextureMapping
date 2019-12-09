@@ -34,7 +34,6 @@ private:
 
 	GLuint diffuseMap;
 	GLuint specularMap;
-	GLuint ambientMap;
 
 public:
 	Material(GLuint _prog, GLuint _diffuseMap, GLuint _specularMap);
