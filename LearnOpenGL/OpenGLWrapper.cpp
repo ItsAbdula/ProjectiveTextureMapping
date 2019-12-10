@@ -154,7 +154,7 @@ void RenderObject::render(Camera &camera)
 
 	set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
 
-	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
 	glm::mat4 view = camera.GetViewMatrix();
 	set_uniform_value(prog, "projection", projection);
 	set_uniform_value(prog, "view", view);

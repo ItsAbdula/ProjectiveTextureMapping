@@ -60,6 +60,11 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 			line.erase(0, charPos + 1);
 		}
 
+		if (line[0] == ' ')
+		{
+			line.erase(0, 1);
+		}
+
 		if (strcmp(op, "v") == false)
 		{
 			glm::vec3 pos = { 0,0,0 };
@@ -100,19 +105,6 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 
 					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-//]%d", &vIndex, &vnIndex);
 					line.erase(0, charPos + 1);
-				}
-
-				if (vIndex >= 1)
-				{
-					faceVertexIndicies.push_back(vIndex - 1);
-				}
-				if (uvIndex >= 1)
-				{
-					faceVertexTexCoordIndicies.push_back(uvIndex - 1);
-				}
-				if (vnIndex >= 1)
-				{
-					faceVertexNormalIndicies.push_back(vnIndex - 1);
 				}
 			}
 
@@ -214,31 +206,30 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 				log_warn(infoLog, fileName + " : " + "faceVertexNormalIndices.size() : " + std::to_string(faceVertexNormalIndicies.size()));
 			}
 		}
+
+		ifs.close();
+
+		return true;
 	}
 
-	ifs.close();
-
-	return true;
-}
-
-Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
-{
-	fileName = "../Images/" + fileName;
-	stbi_set_flip_vertically_on_load(true);
-
-	unsigned char *data = stbi_load(fileName.c_str(), width, height, nrChannels, 0);
-	if (data == NULL)
+	Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
 	{
-		std::cout << "Failed to load texture : " + fileName << std::endl;
+		fileName = "../Images/" + fileName;
+		stbi_set_flip_vertically_on_load(true);
+
+		unsigned char *data = stbi_load(fileName.c_str(), width, height, nrChannels, 0);
+		if (data == NULL)
+		{
+			std::cout << "Failed to load texture : " + fileName << std::endl;
+		}
+
+		Image *img = new Image(*width, *height, *nrChannels, data);
+
+		return img;
 	}
 
-	Image *img = new Image(*width, *height, *nrChannels, data);
-
-	return img;
-}
-
-void free_image(Image *img)
-{
-	stbi_image_free(img->getData());
-	free(img);
-}
+	void free_image(Image *img)
+	{
+		stbi_image_free(img->getData());
+		free(img);
+	}
