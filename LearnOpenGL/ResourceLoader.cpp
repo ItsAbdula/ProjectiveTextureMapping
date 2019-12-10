@@ -206,30 +206,32 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 				log_warn(infoLog, fileName + " : " + "faceVertexNormalIndices.size() : " + std::to_string(faceVertexNormalIndicies.size()));
 			}
 		}
-
-		ifs.close();
-
-		return true;
 	}
 
-	Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
+	ifs.close();
+
+	return true;
+}
+
+
+Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
+{
+	fileName = "../Images/" + fileName;
+	stbi_set_flip_vertically_on_load(true);
+
+	unsigned char *data = stbi_load(fileName.c_str(), width, height, nrChannels, 0);
+	if (data == NULL)
 	{
-		fileName = "../Images/" + fileName;
-		stbi_set_flip_vertically_on_load(true);
-
-		unsigned char *data = stbi_load(fileName.c_str(), width, height, nrChannels, 0);
-		if (data == NULL)
-		{
-			std::cout << "Failed to load texture : " + fileName << std::endl;
-		}
-
-		Image *img = new Image(*width, *height, *nrChannels, data);
-
-		return img;
+		std::cout << "Failed to load texture : " + fileName << std::endl;
 	}
 
-	void free_image(Image *img)
-	{
-		stbi_image_free(img->getData());
-		free(img);
-	}
+	Image *img = new Image(*width, *height, *nrChannels, data);
+
+	return img;
+}
+
+void free_image(Image *img)
+{
+	stbi_image_free(img->getData());
+	free(img);
+}
