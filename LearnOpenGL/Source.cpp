@@ -71,7 +71,7 @@ int main()
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
-	auto planeMaterial = new Material(lightmap, container_diffuse, transparent);
+	auto planeMaterial = new Material(lightmap, magenta, transparent);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{

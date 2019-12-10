@@ -50,7 +50,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 	int charPos = 0;
 	while (std::getline(ifs, line))
 	{
-		if (line[0] == NULL || line[0] == '\n' || line[0] == '#' || line[0] == '!' || line[0] == '$') continue;
+		if (line[0] == NULL || line[0] == '\n' || line[0] == '#' || line[0] == '!' || line[0] == '$' || line[0] == 'o' || line[0] == 'm' || line[0] == 'u') continue;
 
 		sscanf_s(line.c_str(), "%s", op, sizeof(op));
 
@@ -89,8 +89,47 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 			charPos = 0;
 			while ((charPos = line.find(' ')) != std::string::npos)
 			{
-				sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-/]%d%*[-/]%d", &vIndex, &uvIndex, &vnIndex);
-				line.erase(0, charPos + 1);
+				if (line.find("//") == std::string::npos)
+				{
+					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-/]%d%*[-/]%d", &vIndex, &uvIndex, &vnIndex);
+					line.erase(0, charPos + 1);
+				}
+				else
+				{
+					uvIndex = 0;
+
+					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-//]%d", &vIndex, &vnIndex);
+					line.erase(0, charPos + 1);
+				}
+
+				if (vIndex >= 1)
+				{
+					faceVertexIndicies.push_back(vIndex - 1);
+				}
+				if (uvIndex >= 1)
+				{
+					faceVertexTexCoordIndicies.push_back(uvIndex - 1);
+				}
+				if (vnIndex >= 1)
+				{
+					faceVertexNormalIndicies.push_back(vnIndex - 1);
+				}
+			}
+
+			if (line.size() > 0)
+			{
+				if (line.find("//") == std::string::npos)
+				{
+					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-/]%d%*[-/]%d", &vIndex, &uvIndex, &vnIndex);
+					line.erase(0, charPos + 1);
+				}
+				else
+				{
+					uvIndex = 0;
+
+					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-//]%d", &vIndex, &vnIndex);
+					line.erase(0, charPos + 1);
+				}
 
 				if (vIndex >= 1)
 				{
