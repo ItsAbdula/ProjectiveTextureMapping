@@ -70,7 +70,7 @@ int main()
 	auto container_specular = load_image("container2_specular.png");
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
-	auto planeMaterial = new Material(texture_shader, container_diffuse, transparent);
+	auto planeMaterial = new Material(lightmap, container_diffuse, transparent);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -106,7 +106,7 @@ int main()
 		plane->set_scale(glm::vec3(10, 10, 1));
 	}
 	{
-		plane->set_material(planeMaterial);
+		plane->set_material(defaultMaterial);
 	}
 
 	auto cube3 = make_render_object(cube);
@@ -135,7 +135,7 @@ int main()
 			cube1->render(camera);
 			cube2->render(camera);
 			cube3->render(camera);
-			//plane->render(camera);
+			plane->render(camera);
 		}
 
 		glfwSwapBuffers(window);

@@ -326,15 +326,37 @@ GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO)
 	return VBOIndex;
 }
 
-GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo)
+GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO)
 {
-	GLuint *VBOindicies = new GLuint[vertexInfo.size()];
+	GLuint VBOIndex = 0;
+
+	glGenBuffers(1, &VBOIndex);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOIndex);
+	glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec2), &(VBO->front()), GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(attribIndex);
+	glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	return VBOIndex;
+}
+
+GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfoVec3, std::vector<std::vector<glm::vec2> *> &vertexInfoVec2)
+{
+	auto size = vertexInfoVec3.size() + vertexInfoVec2.size();
+	GLuint *VBOindicies = new GLuint[size];
 
 	glBindVertexArray(VAO);
 
-	for (GLuint i = 0; i < vertexInfo.size(); i++)
+	GLuint i = 0;
+	for (i = 0; i < vertexInfoVec3.size(); i++)
 	{
-		VBOindicies[i] = allocate_VBO(i, vertexInfo.at(i));
+		VBOindicies[i] = allocate_VBO(i, vertexInfoVec3.at(i));
+	}
+	for (i = vertexInfoVec3.size(); i < size; i++)
+	{
+		VBOindicies[i] = allocate_VBO(i, vertexInfoVec2.at(i - vertexInfoVec3.size()));
 	}
 
 	glBindVertexArray(0);
@@ -354,7 +376,7 @@ GLuint allocate_VAO()
 Mesh *make_mesh(const std::string fileName)
 {
 	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> vertexTexCoord;
+	std::vector<glm::vec2> vertexTexCoord;
 	std::vector<glm::vec3> vertexNormals;
 
 	const std::string ext = get_extension(fileName);
@@ -367,19 +389,21 @@ Mesh *make_mesh(const std::string fileName)
 		std::cout << "Can't Open " + fileName + " Extension." << std::endl;
 	}
 
-	std::vector<std::vector<glm::vec3> *> vertexInfo;
-	vertexInfo.push_back(&vertices);
+	std::vector<std::vector<glm::vec3> *> vertexInfoVec3;
+	std::vector<std::vector<glm::vec2> *> vertexInfoVec2;
+
+	vertexInfoVec3.push_back(&vertices);
 	if (vertexTexCoord.size() > 0)
 	{
-		vertexInfo.push_back(&vertexTexCoord);
+		vertexInfoVec2.push_back(&vertexTexCoord);
 	}
 	if (vertexNormals.size() > 0)
 	{
-		vertexInfo.push_back(&vertexNormals);
+		vertexInfoVec3.push_back(&vertexNormals);
 	}
 
 	auto VAO = allocate_VAO();
-	auto VBOs = allocate_VBOs(VAO, vertexInfo);
+	auto VBOs = allocate_VBOs(VAO, vertexInfoVec3, vertexInfoVec2);
 
 	Mesh *m = new Mesh(vertices.size(), VAO, VBOs);
 

@@ -31,7 +31,7 @@ std::string get_extension(const std::string &filePath)
 	return filePath.substr(filePath.find_last_of(".") + 1);
 }
 
-bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec3> &vertexTexCoord, std::vector<glm::vec3> &vertexNormals)
+bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec2> &vertexTexCoord, std::vector<glm::vec3> &vertexNormals)
 {
 	vertices.clear();
 	vertexTexCoord.clear();
@@ -42,7 +42,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 
 	char op[3];
 	std::vector<glm::vec3> vertexIndices;
-	std::vector<glm::vec3> vertexTexCoordIndices;
+	std::vector<glm::vec2> vertexTexCoordIndices;
 	std::vector<glm::vec3> vertexNormalIndices;
 
 	ifs.open("../Models/" + fileName);
@@ -74,7 +74,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 		}
 		else if (strcmp(op, "vt") == false)
 		{
-			glm::vec3 pos = { 0,0,0 };
+			glm::vec2 pos = { 0,0 };
 			sscanf_s(line.c_str(), "%f %f", &pos.x, &pos.y);
 			vertexTexCoordIndices.push_back(pos);
 		}
