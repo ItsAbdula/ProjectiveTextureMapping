@@ -71,7 +71,7 @@ int main()
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
-	auto planeMaterial = new Material(lightmap, magenta, white);
+	auto planeMaterial = new Material(lightmap, container_diffuse, transparent);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -120,6 +120,14 @@ int main()
 		cube3->set_material(cubeMaterial);
 	}
 
+	auto cube4 = make_render_object(cube);
+	{
+		cube4->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
+	}
+	{
+		cube4->set_material(cubeMaterial);
+	}
+
 	while (!glfwWindowShouldClose(window))
 	{
 		double currentFrame = glfwGetTime();
@@ -137,6 +145,7 @@ int main()
 			cube2->render(camera);
 			cube3->render(camera);
 			plane->render(camera);
+			cube4->render(camera);
 		}
 
 		glfwSwapBuffers(window);

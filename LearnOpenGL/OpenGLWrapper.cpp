@@ -335,7 +335,7 @@ GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec2> *VBO)
 	glBufferData(GL_ARRAY_BUFFER, VBO->size() * sizeof(glm::vec2), &(VBO->front()), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(attribIndex);
-	glVertexAttribPointer(attribIndex, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glVertexAttribPointer(attribIndex, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
