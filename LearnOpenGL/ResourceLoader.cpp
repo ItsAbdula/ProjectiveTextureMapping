@@ -167,26 +167,29 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 				log_warn(infoLog, fileName + " : " + "faceVertexIndices.size() : " + std::to_string(faceVertexIndicies.size()));
 			}
 
-			if (faceVertexTexCoordIndicies.size() == 3)
+			if (faceVertexTexCoordIndicies.size() > 0)
 			{
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
-			}
-			else if (faceVertexTexCoordIndicies.size() == 4)
-			{
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+				if (faceVertexTexCoordIndicies.size() == 3)
+				{
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+				}
+				else if (faceVertexTexCoordIndicies.size() == 4)
+				{
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[1]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
 
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
-				vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[3]]);
-			}
-			else
-			{
-				GLchar infoLog[512] = { 0, };
-				log_warn(infoLog, fileName + " : " + "vertexTexCoordIndices.size() : " + std::to_string(faceVertexTexCoordIndicies.size()));
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[0]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[2]]);
+					vertexTexCoord.push_back(vertexTexCoordIndices[faceVertexTexCoordIndicies[3]]);
+				}
+				else
+				{
+					GLchar infoLog[512] = { 0, };
+					log_warn(infoLog, fileName + " : " + "vertexTexCoordIndices.size() : " + std::to_string(faceVertexTexCoordIndicies.size()));
+				}
 			}
 
 			if (faceVertexNormalIndicies.size() == 3)
