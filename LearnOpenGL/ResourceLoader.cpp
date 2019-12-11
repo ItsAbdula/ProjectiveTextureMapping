@@ -106,22 +106,6 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-//]%d", &vIndex, &vnIndex);
 					line.erase(0, charPos + 1);
 				}
-			}
-
-			if (line.size() > 0)
-			{
-				if (line.find("//") == std::string::npos)
-				{
-					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-/]%d%*[-/]%d", &vIndex, &uvIndex, &vnIndex);
-					line.erase(0, charPos + 1);
-				}
-				else
-				{
-					uvIndex = 0;
-
-					sscanf_s(line.substr(0, charPos).c_str(), "%d%*[-//]%d", &vIndex, &vnIndex);
-					line.erase(0, charPos + 1);
-				}
 
 				if (vIndex >= 1)
 				{
@@ -212,7 +196,6 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 
 	return true;
 }
-
 
 Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
 {
