@@ -1,19 +1,20 @@
 #version 330 core
-uniform mat4 TexGenMatCam0;
-uniform mat4 ViewMat;
+layout (location = 0) in vec3 aPos;
 
+out vec4 TexCoords;
+
+uniform mat4 TexGenMatCam0;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 void main()
-{
-	mat4 InvViewMat = inverse(ViewMat);	
-	
-	vec4 posEye =  gl_ModelViewMatrix * gl_Vertex;
-	vec4 posWorld = InvViewMat * posEye;
+{	
+	vec3 FragPos = vec3(model * vec4(aPos, 1.0));
+	vec4 VertexPos_eye =  model * view * vec4(aPos, 1.0);
+	vec4 VertexPos_world = inverse(view) * VertexPos_eye;
 		
-	gl_TexCoord[0] = TexGenMatCam0 * posWorld;
+	TexCoords = TexGenMatCam0 * VertexPos_world;
 
-	gl_Position = ftransform();		
+	gl_Position = projection * view * vec4(FragPos, 1.0);
 }
