@@ -175,6 +175,39 @@ void RenderObject::render(Camera &camera)
 	glUseProgram(0);
 }
 
+void RenderObject::projective_render(Camera &camera)
+{
+	const glm::mat4 bias = { 0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0 };
+	glm::mat4 pp = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 10.0f);
+	glm::mat4 pv = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
+	glm::mat4 InvView = glm::inverse(camera.GetViewMatrix());
+	glm::mat4 result = bias * pp * pv;
+
+	auto prog = material->get_program();
+	glUseProgram(prog);
+
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
+	glm::mat4 view = camera.GetViewMatrix();
+	set_uniform_value(prog, "TexGenMatCam0", result);
+	set_uniform_value(prog, "projection", projection);
+	set_uniform_value(prog, "view", view);
+	set_uniform_value(prog, "model", model);
+
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
+	}
+
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+	}
+
+	draw_mesh(*mesh);
+
+	glUseProgram(0);
+}
+
 RenderObject *make_render_object(Mesh *mesh)
 {
 	RenderObject *ro = new RenderObject(mesh);

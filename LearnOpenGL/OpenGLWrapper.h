@@ -77,6 +77,7 @@ public:
 	void set_material(Material *_material);
 
 	void render(Camera &camera);
+	void projective_render(Camera &camera);
 };
 
 RenderObject *make_render_object(Mesh *mesh);

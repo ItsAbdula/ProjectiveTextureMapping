@@ -57,6 +57,7 @@ int main()
 	auto lamp = build_program("Lighting_Lamp");
 	auto lightmap = build_program("Lighting_Maps");
 	auto texture_shader = build_program("Texture");
+	auto projector_shader = build_program("Projector");
 
 	auto cube = make_mesh("cube.obj");
 
@@ -66,12 +67,22 @@ int main()
 	auto white = load_image("white.png");
 	auto transparent = load_image("transparent.png");
 
+	auto wall = load_image("wall.jpg");
 	auto container_diffuse = load_image("container2.png");
 	auto container_specular = load_image("container2_specular.png");
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
 	auto planeMaterial = new Material(lightmap, magenta, transparent);
+	auto projectorMaterial = new Material(projector_shader, transparent, transparent);
+
+	auto projector = make_render_object(make_mesh("cube.obj"));
+	{
+		projector->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
+	}
+	{
+		projector->set_material(projectorMaterial);
+	}
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -79,7 +90,7 @@ int main()
 		teapot->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
 	}
 	{
-		teapot->set_material(defaultMaterial);
+		teapot->set_material(projectorMaterial);
 	}
 
 	auto cube1 = make_render_object(cube);
@@ -140,7 +151,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		{
-			teapot->render(camera);
+			teapot->projective_render(camera);
 			cube1->render(camera);
 			cube2->render(camera);
 			cube3->render(camera);
