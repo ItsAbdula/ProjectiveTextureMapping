@@ -68,6 +68,7 @@ RenderObject::RenderObject(Mesh * _mesh)
 	mesh = _mesh;
 
 	update_model_matrix();
+	update_directional_vector();
 }
 
 Material *RenderObject::get_material()
@@ -97,11 +98,29 @@ void RenderObject::update_model_matrix()
 	model = glm::scale(model, scale);
 }
 
+void RenderObject::update_directional_vector()
+{
+	glm::vec3 front;
+	glm::vec3 up;
+	glm::vec3 right;
+
+	glm::vec3 _front;
+	front.x = cos(glm::radians(rotate.y)) * cos(glm::radians(rotate.x));
+	front.y = sin(glm::radians(rotate.x));
+	front.z = sin(glm::radians(rotate.y)) * cos(glm::radians(rotate.x));
+	front = glm::normalize(_front);
+
+	right = glm::normalize(glm::cross(front, glm::vec3(0, 1, 0)));
+
+	up = glm::normalize(glm::cross(right, front));
+}
+
 void RenderObject::set_translate(glm::vec3 _translate)
 {
 	translate = _translate;
 
 	update_model_matrix();
+	update_directional_vector();
 }
 
 void RenderObject::set_rotate(glm::vec3 _rotate)
@@ -109,6 +128,7 @@ void RenderObject::set_rotate(glm::vec3 _rotate)
 	rotate = _rotate;
 
 	update_model_matrix();
+	update_directional_vector();
 }
 
 void RenderObject::set_scale(glm::vec3 _scale)
@@ -123,6 +143,7 @@ void RenderObject::move(glm::vec3 _delta)
 	translate += _delta;
 
 	update_model_matrix();
+	update_directional_vector();
 }
 
 void RenderObject::move(glm::vec3 _direction, glm::vec1 _velocity)
@@ -177,23 +198,13 @@ void RenderObject::render(Camera &camera)
 
 void RenderObject::projective_render(Camera &camera)
 {
-	glm::vec3 projrotate = glm::vec3(60.0f, 0.0f, 0.0f);
-	glm::vec3 front;
-	front.x = cos(glm::radians(projrotate.y)) * cos(glm::radians(projrotate.x));
-	front.y = sin(glm::radians(projrotate.x));
-	front.z = sin(glm::radians(projrotate.y)) * cos(glm::radians(projrotate.x));
-	front = glm::normalize(front);
-
-	auto Right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
-	auto Up = glm::normalize(glm::cross(Right, front));
-
 	glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
 							0.0f, 0.5f, 0.0f, 0.5f,
 							0.0f, 0.0f, 0.5f, 0.5f,
 							0.0f, 0.0f, 0.0f, 1.0f };
 
 	glm::mat4 projector_view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
-	glm::mat4 projector_projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 projector_projection = glm::perspective(glm::radians(camera.Zoom), 1.0f, 0.1f, 100.0f);
 
 	auto prog = material->get_program();
 	glUseProgram(prog);
@@ -362,12 +373,12 @@ void set_uniform_value(GLuint &prog, const char *name, glm::ivec3 &value)
 	auto uniform = glGetUniformLocation(prog, name);
 	glUniform3iv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::vec4 &value)
+void set_uniform_value(GLuint &prog, const char *name, glm::vec4 value)
 {
 	auto uniform = glGetUniformLocation(prog, name);
 	glUniform4fv(uniform, 1, &value.x);
 }
-void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 &value)
+void set_uniform_value(GLuint &prog, const char *name, glm::ivec4 value)
 {
 	auto uniform = glGetUniformLocation(prog, name);
 	glUniform4iv(uniform, 1, &value.x);
