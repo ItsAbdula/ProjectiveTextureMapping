@@ -75,7 +75,9 @@ int main()
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
 	auto planeMaterial = new Material(lightmap, magenta, transparent);
+
 	auto projectorMaterial = new Material(projector_shader, wall_tex, wall);
+	auto projectorplaneMaterial = new Material(projector_shader, magenta, wall);
 
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
@@ -112,10 +114,11 @@ int main()
 	auto plane = make_render_object(make_mesh("plane.obj"));
 	{
 		auto transform = plane->get_transform();
-		transform->set_scale(glm::vec3(10, 10, 1));
+		transform->set_translate(glm::vec3(0.0f, 0.0f, -60.0f));
+		transform->set_scale(glm::vec3(40, 40, 1));
 	}
 	{
-		plane->set_material(planeMaterial);
+		plane->set_material(projectorplaneMaterial);
 	}
 
 	auto cube3 = make_render_object(cube);
@@ -151,11 +154,11 @@ int main()
 
 		{
 			teapot->projective_render(camera);
-			cube1->projective_render(camera);
-			cube2->projective_render(camera);
-			cube3->projective_render(camera);
+			cube1->render(camera);
+			cube2->render(camera);
+			cube3->render(camera);
 			plane->projective_render(camera);
-			cube4->projective_render(camera);
+			cube4->render(camera);
 		}
 
 		glfwSwapBuffers(window);
