@@ -127,6 +127,7 @@
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="OpenGLWrapper.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="OpenGLWrapper.h" />
     <ClInclude Include="ShaderType.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
