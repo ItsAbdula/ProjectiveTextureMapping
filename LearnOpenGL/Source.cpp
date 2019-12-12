@@ -61,22 +61,23 @@ int main()
 
 	auto cube = make_mesh("cube.obj");
 
-	auto black = load_image("black.png");
-	auto magenta = load_image("magenta.png");
-	auto orange = load_image("orange.png");
-	auto white = load_image("white.png");
-	auto transparent = load_image("transparent.png");
+	auto black = load_texture("black.png");
+	auto magenta = load_texture("magenta.png");
+	auto orange = load_texture("orange.png");
+	auto white = load_texture("white.png");
+	auto transparent = load_texture("transparent.png");
 
-	auto wall = load_image("wall.jpg");
-	auto container_diffuse = load_image("container2.png");
-	auto container_specular = load_image("container2_specular.png");
+	auto wall = load_image("wall.jpg", ImageType::CLAMP);
+	auto wall_tex = load_image("wall.jpg", ImageType::REPEAT);
+	auto container_diffuse = load_texture("container2.png");
+	auto container_specular = load_texture("container2_specular.png");
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
 	auto planeMaterial = new Material(lightmap, magenta, transparent);
-	auto projectorMaterial = new Material(projector_shader, transparent, transparent);
+	auto projectorMaterial = new Material(projector_shader, wall_tex, wall);
 
-	auto projector = make_render_object(make_mesh("cube.obj"));
+	auto projector = make_render_object(cube);
 	{
 		projector->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
 	}
