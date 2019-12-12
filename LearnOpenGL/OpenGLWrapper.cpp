@@ -177,29 +177,65 @@ void RenderObject::render(Camera &camera)
 
 void RenderObject::projective_render(Camera &camera)
 {
-	const glm::mat4 bias = { 0.5, 0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0, 1.0 };
-	glm::mat4 pp = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 10.0f);
-	glm::mat4 pv = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
-	glm::mat4 InvView = glm::inverse(camera.GetViewMatrix());
-	glm::mat4 result = bias * pp * pv;
+	glm::vec3 projrotate = glm::vec3(60.0f, 0.0f, 0.0f);
+	glm::vec3 front;
+	front.x = cos(glm::radians(projrotate.y)) * cos(glm::radians(projrotate.x));
+	front.y = sin(glm::radians(projrotate.x));
+	front.z = sin(glm::radians(projrotate.y)) * cos(glm::radians(projrotate.x));
+	front = glm::normalize(front);
+
+	auto Right = glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)));
+	auto Up = glm::normalize(glm::cross(Right, front));
+
+	glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
+							0.0f, 0.5f, 0.0f, 0.5f,
+							0.0f, 0.0f, 0.5f, 0.5f,
+							0.0f, 0.0f, 0.0f, 1.0f };
+
+	glm::mat4 projector_view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
+	glm::mat4 projector_projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 100.0f);
 
 	auto prog = material->get_program();
 	glUseProgram(prog);
 
+	set_uniform_value(prog, "light.position", _lightPos);
+	set_uniform_value(prog, "viewPos", camera.Position);
+
+	glm::vec3 a = { 0.2f, 0.2f, 0.2f };
+	glm::vec3 d = { 0.5f, 0.5f, 0.5f };
+	glm::vec3 f = { 1.0f, 1.0f, 1.0f };
+	set_uniform_value(prog, "light.ambient", a);
+	set_uniform_value(prog, "light.diffuse", d);
+	set_uniform_value(prog, "light.specular", f);
+
+	set_uniform_value(prog, "material.shininess", glm::fvec1{ 64.0f });
+
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
 	glm::mat4 view = camera.GetViewMatrix();
-	set_uniform_value(prog, "TexGenMatCam0", result);
+
+	set_uniform_value(prog, "projectorBias", bias);
+	set_uniform_value(prog, "projectorProjection", projector_projection);
+	set_uniform_value(prog, "projectorView", projector_view);
+
 	set_uniform_value(prog, "projection", projection);
 	set_uniform_value(prog, "view", view);
 	set_uniform_value(prog, "model", model);
 
 	{
+		set_uniform_value(prog, "material.diffuse", glm::ivec1{ 0 });
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, material->get_diffuseMap());
 	}
 
 	{
+		set_uniform_value(prog, "material.specular", glm::ivec1{ 1 });
 		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
+	}
+
+	{
+		set_uniform_value(prog, "projImage", glm::ivec1{ 2 });
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, material->get_specularMap());
 	}
 
@@ -443,12 +479,17 @@ Mesh *make_mesh(const std::string fileName)
 	return m;
 }
 
-GLuint load_image(const std::string fileName)
+GLuint load_texture(const std::string fileName)
+{
+	return load_image(fileName, ImageType::REPEAT);
+}
+
+GLuint load_image(const std::string fileName, const ImageType type)
 {
 	int width, height, nrChannels;
 	GLuint textureID;
 
-	Image *tex = load_Image(fileName, &width, &height, &nrChannels);
+	Image *tex = make_Image(fileName, &width, &height, &nrChannels);
 	if (tex != NULL && tex->getData() != NULL)
 	{
 		GLenum format;
@@ -462,8 +503,16 @@ GLuint load_image(const std::string fileName)
 		glGenTextures(1, &textureID);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		if (type == ImageType::REPEAT)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		else if (type == ImageType::CLAMP)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		}
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
