@@ -194,7 +194,7 @@ bool openObj(const std::string fileName, std::vector<glm::vec3> &vertices, std::
 	return true;
 }
 
-Image *load_Image(std::string fileName, int *width, int *height, int *nrChannels)
+Image *make_Image(std::string fileName, int *width, int *height, int *nrChannels)
 {
 	fileName = "../Images/" + fileName;
 	stbi_set_flip_vertically_on_load(true);
