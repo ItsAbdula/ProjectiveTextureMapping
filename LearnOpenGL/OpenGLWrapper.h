@@ -50,35 +50,6 @@ public:
 	GLuint get_specularMap();
 };
 
-class Transform
-{
-private:
-	glm::mat4 model;
-
-	glm::vec3 translate;
-	glm::vec3 rotate;
-	glm::vec3 scale;
-
-	glm::vec3 front;
-	glm::vec3 up;
-	glm::vec3 right;
-
-	void update_model_matrix();
-	void update_directional_vector();
-
-public:
-	Transform();
-	glm::mat4 get_model_matrix();
-	glm::vec3 get_front();
-
-	void set_translate(glm::vec3 _translate);
-	void set_rotate(glm::vec3 _rotate);
-	void set_scale(glm::vec3 _scale);
-
-	void move(glm::vec3 _delta);
-	void move(glm::vec3 _direction, glm::vec1 _velocity);
-};
-
 class RenderObject
 {
 private:

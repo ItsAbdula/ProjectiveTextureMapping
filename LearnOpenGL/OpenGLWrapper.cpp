@@ -75,91 +75,9 @@ GLuint RenderObject::get_vertex_count()
 	return mesh->get_vertex_count();
 }
 
-Transform::Transform()
-{
-	translate = glm::vec3(0.0f, 0.0f, 0.0f);
-	rotate = glm::vec3(0.0f, 0.0f, 0.0f);
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	update_model_matrix();
-	update_directional_vector();
-}
-
-glm::mat4 Transform::get_model_matrix()
-{
-	return model;
-}
-
-void Transform::update_model_matrix()
-{
-	model = glm::mat4(1.0f);
-	model = glm::translate(model, translate);
-
-	model = glm::rotate(model, glm::radians(rotate.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotate.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(rotate.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-	model = glm::scale(model, scale);
-}
-
-void Transform::update_directional_vector()
-{
-	glm::vec3 front;
-	glm::vec3 up;
-	glm::vec3 right;
-
-	glm::vec3 _front;
-	front.x = cos(glm::radians(rotate.y)) * cos(glm::radians(rotate.x));
-	front.y = sin(glm::radians(rotate.x));
-	front.z = sin(glm::radians(rotate.y)) * cos(glm::radians(rotate.x));
-	front = glm::normalize(_front);
-
-	right = glm::normalize(glm::cross(front, glm::vec3(0, 1, 0)));
-
-	up = glm::normalize(glm::cross(right, front));
-}
-
 Transform *RenderObject::get_transform()
 {
 	return &transform;
-}
-
-void Transform::set_translate(glm::vec3 _translate)
-{
-	translate = _translate;
-
-	update_model_matrix();
-	update_directional_vector();
-}
-
-void Transform::set_rotate(glm::vec3 _rotate)
-{
-	rotate = _rotate;
-
-	update_model_matrix();
-	update_directional_vector();
-}
-
-void Transform::set_scale(glm::vec3 _scale)
-{
-	scale = _scale;
-
-	update_model_matrix();
-}
-
-void Transform::move(glm::vec3 _delta)
-{
-	translate += _delta;
-
-	update_model_matrix();
-	update_directional_vector();
-}
-
-void Transform::move(glm::vec3 _direction, glm::vec1 _velocity)
-{
-	translate += glm::vec3(_velocity *_direction.x, _velocity *_direction.y, _velocity *_direction.z);
-
-	update_model_matrix();
 }
 
 void RenderObject::set_material(Material *_material)
@@ -214,7 +132,7 @@ void RenderObject::projective_render(Camera &camera)
 							0.0f, 0.0f, 0.5f, 0.5f,
 							0.0f, 0.0f, 0.0f, 1.0f };
 
-	glm::mat4 projector_view = glm::lookAt(camera.Position, camera.Position + camera.Front, camera.Up);
+	glm::mat4 projector_view = glm::lookAt(camera.transform.get_translate(), camera.transform.get_translate() + camera.transform.get_front(), camera.transform.get_up());
 	glm::mat4 projector_projection = glm::perspective(glm::radians(camera.Zoom), 1.0f, 0.1f, 100.0f);
 
 	auto prog = material->get_program();
