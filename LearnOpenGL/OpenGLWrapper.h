@@ -50,14 +50,9 @@ public:
 	GLuint get_specularMap();
 };
 
-class RenderObject
+class Transform
 {
 private:
-	GLuint id;
-
-	Mesh *mesh;
-	Material *material;
-
 	glm::mat4 model;
 
 	glm::vec3 translate;
@@ -72,10 +67,7 @@ private:
 	void update_directional_vector();
 
 public:
-	RenderObject(Mesh * _mesh);
-
-	Material *get_material();
-	GLuint get_vertex_count();
+	Transform();
 	glm::mat4 get_model_matrix();
 	glm::vec3 get_front();
 
@@ -85,6 +77,23 @@ public:
 
 	void move(glm::vec3 _delta);
 	void move(glm::vec3 _direction, glm::vec1 _velocity);
+};
+
+class RenderObject
+{
+private:
+	GLuint id;
+
+	Transform transform;
+	Mesh *mesh;
+	Material *material;
+
+public:
+	RenderObject(Mesh * _mesh);
+
+	Transform *get_transform();
+	Material *get_material();
+	GLuint get_vertex_count();
 
 	void set_material(Material *_material);
 

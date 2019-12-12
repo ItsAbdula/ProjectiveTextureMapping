@@ -61,14 +61,8 @@ GLuint Material::get_specularMap()
 
 RenderObject::RenderObject(Mesh * _mesh)
 {
-	translate = glm::vec3(0.0f, 0.0f, 0.0f);
-	rotate = glm::vec3(0.0f, 0.0f, 0.0f);
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
-
+	transform = Transform();
 	mesh = _mesh;
-
-	update_model_matrix();
-	update_directional_vector();
 }
 
 Material *RenderObject::get_material()
@@ -81,12 +75,22 @@ GLuint RenderObject::get_vertex_count()
 	return mesh->get_vertex_count();
 }
 
-glm::mat4 RenderObject::get_model_matrix()
+Transform::Transform()
+{
+	translate = glm::vec3(0.0f, 0.0f, 0.0f);
+	rotate = glm::vec3(0.0f, 0.0f, 0.0f);
+	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	update_model_matrix();
+	update_directional_vector();
+}
+
+glm::mat4 Transform::get_model_matrix()
 {
 	return model;
 }
 
-void RenderObject::update_model_matrix()
+void Transform::update_model_matrix()
 {
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, translate);
@@ -98,7 +102,7 @@ void RenderObject::update_model_matrix()
 	model = glm::scale(model, scale);
 }
 
-void RenderObject::update_directional_vector()
+void Transform::update_directional_vector()
 {
 	glm::vec3 front;
 	glm::vec3 up;
@@ -115,7 +119,12 @@ void RenderObject::update_directional_vector()
 	up = glm::normalize(glm::cross(right, front));
 }
 
-void RenderObject::set_translate(glm::vec3 _translate)
+Transform *RenderObject::get_transform()
+{
+	return &transform;
+}
+
+void Transform::set_translate(glm::vec3 _translate)
 {
 	translate = _translate;
 
@@ -123,7 +132,7 @@ void RenderObject::set_translate(glm::vec3 _translate)
 	update_directional_vector();
 }
 
-void RenderObject::set_rotate(glm::vec3 _rotate)
+void Transform::set_rotate(glm::vec3 _rotate)
 {
 	rotate = _rotate;
 
@@ -131,14 +140,14 @@ void RenderObject::set_rotate(glm::vec3 _rotate)
 	update_directional_vector();
 }
 
-void RenderObject::set_scale(glm::vec3 _scale)
+void Transform::set_scale(glm::vec3 _scale)
 {
 	scale = _scale;
 
 	update_model_matrix();
 }
 
-void RenderObject::move(glm::vec3 _delta)
+void Transform::move(glm::vec3 _delta)
 {
 	translate += _delta;
 
@@ -146,7 +155,7 @@ void RenderObject::move(glm::vec3 _delta)
 	update_directional_vector();
 }
 
-void RenderObject::move(glm::vec3 _direction, glm::vec1 _velocity)
+void Transform::move(glm::vec3 _direction, glm::vec1 _velocity)
 {
 	translate += glm::vec3(_velocity *_direction.x, _velocity *_direction.y, _velocity *_direction.z);
 
@@ -177,6 +186,8 @@ void RenderObject::render(Camera &camera)
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
 	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 model = transform.get_model_matrix();
+
 	set_uniform_value(prog, "projection", projection);
 	set_uniform_value(prog, "view", view);
 	set_uniform_value(prog, "model", model);
@@ -223,6 +234,7 @@ void RenderObject::projective_render(Camera &camera)
 
 	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)_SCR_WIDTH / (float)_SCR_HEIGHT, 0.1f, 500.0f);
 	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 model = transform.get_model_matrix();
 
 	set_uniform_value(prog, "projectorBias", bias);
 	set_uniform_value(prog, "projectorProjection", projector_projection);
@@ -260,7 +272,7 @@ RenderObject *make_render_object(Mesh *mesh)
 	RenderObject *ro = new RenderObject(mesh);
 
 	return ro;
-};
+}
 
 GLuint build_program(const std::string name)
 {

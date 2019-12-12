@@ -77,18 +77,11 @@ int main()
 	auto planeMaterial = new Material(lightmap, magenta, transparent);
 	auto projectorMaterial = new Material(projector_shader, wall_tex, wall);
 
-	auto projector = make_render_object(cube);
-	{
-		projector->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
-	}
-	{
-		projector->set_material(projectorMaterial);
-	}
-
 	auto teapot = make_render_object(make_mesh("teapot.obj"));
 	{
-		teapot->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
-		teapot->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+		auto transform = teapot->get_transform();
+		transform->set_translate(glm::vec3(0.0f, -10.0f, -40.0f));
+		transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
 	}
 	{
 		teapot->set_material(projectorMaterial);
@@ -96,9 +89,10 @@ int main()
 
 	auto cube1 = make_render_object(cube);
 	{
-		cube1->set_translate(glm::vec3(0, -15, -40));
-		cube1->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-		cube1->set_scale(glm::vec3(10, 10, 4));
+		auto transform = cube1->get_transform();
+		transform->set_translate(glm::vec3(0, -15, -40));
+		transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+		transform->set_scale(glm::vec3(10, 10, 4));
 	}
 	{
 		cube1->set_material(cubeMaterial);
@@ -106,9 +100,10 @@ int main()
 
 	auto cube2 = make_render_object(cube);
 	{
-		cube2->set_translate(glm::vec3(0, -10, -40));
-		cube1->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-		cube2->set_scale(glm::vec3(12, 12, 1));
+		auto transform = cube2->get_transform();
+		transform->set_translate(glm::vec3(0, -10, -40));
+		transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+		transform->set_scale(glm::vec3(12, 12, 1));
 	}
 	{
 		cube2->set_material(cubeMaterial);
@@ -116,7 +111,8 @@ int main()
 
 	auto plane = make_render_object(make_mesh("plane.obj"));
 	{
-		plane->set_scale(glm::vec3(10, 10, 1));
+		auto transform = plane->get_transform();
+		transform->set_scale(glm::vec3(10, 10, 1));
 	}
 	{
 		plane->set_material(planeMaterial);
@@ -124,9 +120,10 @@ int main()
 
 	auto cube3 = make_render_object(cube);
 	{
-		cube3->set_translate(glm::vec3(0.0f, -20.0f, -40.0f));
-		cube3->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
-		cube3->set_scale(glm::vec3(50, 50, 0.5));
+		auto transform = cube3->get_transform();
+		transform->set_translate(glm::vec3(0.0f, -20.0f, -40.0f));
+		transform->set_rotate(glm::vec3(-90.0f, 0.0f, 0.0f));
+		transform->set_scale(glm::vec3(50, 50, 0.5));
 	}
 	{
 		cube3->set_material(cubeMaterial);
@@ -134,7 +131,8 @@ int main()
 
 	auto cube4 = make_render_object(cube);
 	{
-		cube4->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
+		auto transform = cube4->get_transform();
+		transform->set_translate(glm::vec3(0.0f, 10.0f, 0.0f));
 	}
 	{
 		cube4->set_material(cubeMaterial);
@@ -153,11 +151,11 @@ int main()
 
 		{
 			teapot->projective_render(camera);
-			cube1->render(camera);
-			cube2->render(camera);
-			cube3->render(camera);
-			plane->render(camera);
-			cube4->render(camera);
+			cube1->projective_render(camera);
+			cube2->projective_render(camera);
+			cube3->projective_render(camera);
+			plane->projective_render(camera);
+			cube4->projective_render(camera);
 		}
 
 		glfwSwapBuffers(window);
