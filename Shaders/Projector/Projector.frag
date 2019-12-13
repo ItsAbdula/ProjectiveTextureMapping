@@ -52,8 +52,13 @@ void main (void)
     {    
 		vec2 finalCoords = ProjTexCoords.st / ProjTexCoords.q;
 		vec4 ProjMapColor_forCam1 = texture(projImage, finalCoords);
-		projColor = ProjMapColor_forCam1;			
+		projColor = ProjMapColor_forCam1;
+		
+		if(ProjMapColor_forCam1.a < 1.0)
+		{
+			projColor = result;
+		}	
     }
-
+	
     FragColor = mix(result, projColor, 0.4f);
 }

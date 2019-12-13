@@ -123,6 +123,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="OpenGLWrapper.cpp" />
@@ -132,9 +133,11 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="OpenGLWrapper.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderType.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
