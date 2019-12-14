@@ -125,15 +125,15 @@ void RenderObject::render(Camera &camera)
 	glUseProgram(0);
 }
 
-void RenderObject::projective_render(Camera &camera)
+void RenderObject::projective_render(Camera &camera, Camera &projector)
 {
 	glm::mat4 bias = { 0.5f, 0.0f, 0.0f, 0.5f,
 							0.0f, 0.5f, 0.0f, 0.5f,
 							0.0f, 0.0f, 0.5f, 0.5f,
 							0.0f, 0.0f, 0.0f, 1.0f };
 
-	glm::mat4 projector_view = glm::lookAt(camera.transform.get_translate(), camera.transform.get_translate() + camera.transform.get_front(), camera.transform.get_up());
-	glm::mat4 projector_projection = glm::perspective(glm::radians(camera.Zoom), 1.0f, 0.1f, 100.0f);
+	glm::mat4 projector_view = glm::lookAt(projector.transform.get_translate(), projector.transform.get_translate() + projector.transform.get_front(), projector.transform.get_up());
+	glm::mat4 projector_projection = glm::perspective(glm::radians(projector.Zoom), 1.0f, 0.1f, 100.0f);
 
 	auto prog = material->get_program();
 	glUseProgram(prog);
