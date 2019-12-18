@@ -93,5 +93,4 @@ GLuint allocate_VBO(const GLuint attribIndex, std::vector<glm::vec3> *VBO);
 GLuint *allocate_VBOs(GLuint VAO, std::vector<std::vector<glm::vec3> *> &vertexInfo);
 GLuint allocate_VAO();
 Mesh *make_mesh(const std::string fileName);
-GLuint load_texture(const std::string fileName);
-GLuint load_image(const std::string fileName, const ImageType type);
+GLuint load_image(const std::string fileName, const ImageType type = ImageType::CLAMP);

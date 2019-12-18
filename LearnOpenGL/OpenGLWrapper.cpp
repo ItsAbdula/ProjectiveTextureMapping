@@ -420,11 +420,6 @@ Mesh *make_mesh(const std::string fileName)
 	return m;
 }
 
-GLuint load_texture(const std::string fileName)
-{
-	return load_image(fileName, ImageType::REPEAT);
-}
-
 GLuint load_image(const std::string fileName, const ImageType type)
 {
 	int width, height, nrChannels;

@@ -28,8 +28,8 @@ double decalY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
 // timing
-float deltaTime = 0.0f;
-float lastFrame = 0.0f;
+double deltaTime = 0.0f;
+double lastFrame = 0.0f;
 
 // lighting
 glm::vec3 lightPos(1.2f, 20.0f, 2.0f);
@@ -160,16 +160,16 @@ void Scene1(GLFWwindow *window)
 
 	auto cube = make_mesh("cube.obj");
 
-	auto black = load_texture("black.png");
-	auto magenta = load_texture("magenta.png");
-	auto orange = load_texture("orange.png");
-	auto white = load_texture("white.png");
-	auto transparent = load_texture("transparent.png");
+	auto black = load_image("black.png", ImageType::REPEAT);
+	auto magenta = load_image("magenta.png", ImageType::REPEAT);
+	auto orange = load_image("orange.png", ImageType::REPEAT);
+	auto white = load_image("white.png", ImageType::REPEAT);
+	auto transparent = load_image("transparent.png", ImageType::REPEAT);
 
-	auto wall = load_image("smileface.png", ImageType::CLAMP);
+	auto wall = load_image("smileface.png");
 	auto wall_tex = load_image("wall.jpg", ImageType::REPEAT);
-	auto container_diffuse = load_texture("container2.png");
-	auto container_specular = load_texture("container2_specular.png");
+	auto container_diffuse = load_image("container2.png", ImageType::REPEAT);
+	auto container_specular = load_image("container2_specular.png", ImageType::REPEAT);
 
 	auto defaultMaterial = new Material(lightmap, orange, transparent);
 	auto cubeMaterial = new Material(lightmap, container_diffuse, container_specular);
@@ -273,20 +273,20 @@ void Scene2(GLFWwindow *window)
 
 	auto cube = make_mesh("cube.obj");
 
-	auto transparent = load_texture("transparent.png");
+	auto transparent = load_image("transparent.png", ImageType::REPEAT);
 
-	auto human_diffuse = load_texture("Body_Colour.jpg");
-	auto human_tattoo = load_image("tattoo.png", ImageType::CLAMP);
+	auto human_diffuse = load_image("Body_Colour.jpg", ImageType::REPEAT);
+	auto human_tattoo = load_image("tattoo.png");
 
 	//auto wall_diffuse = load_texture("store.png");
 	//auto wall_specular = load_texture("storeNM.png");
 
-	auto floor_diffuse = load_texture("concrete_light.jpg");
+	auto floor_diffuse = load_image("concrete_light.jpg", ImageType::REPEAT);
 
-	auto cube_diffuse = load_texture("container2.png");
-	auto cube_specular = load_texture("container2_specular.png");
+	auto cube_diffuse = load_image("container2.png", ImageType::REPEAT);
+	auto cube_specular = load_image("container2_specular.png", ImageType::REPEAT);
 
-	auto wall = load_image("tattoo.png", ImageType::CLAMP);
+	auto wall = load_image("tattoo.png");
 	auto wall_tex = load_image("store.png", ImageType::REPEAT);
 
 	auto humanMaterial = new Material(projector_shader, human_diffuse, human_tattoo);
@@ -392,17 +392,17 @@ void Scene3(GLFWwindow *window)
 
 	auto cube = make_mesh("cube.obj");
 
-	auto transparent = load_texture("transparent.png");
+	auto transparent = load_image("transparent.png", ImageType::REPEAT);
 
-	auto humvee_diffuse = load_texture("Tex_0023_1.png");
-	auto humvee_specular = load_texture("Tex_0025_1.png");
+	auto humvee_diffuse = load_image("Tex_0023_1.png", ImageType::REPEAT);
+	auto humvee_specular = load_image("Tex_0025_1.png", ImageType::REPEAT);
 
-	auto floor_diffuse = load_texture("concrete_light.jpg");
+	auto floor_diffuse = load_image("concrete_light.jpg", ImageType::REPEAT);
 
-	auto wall_diffuse = load_texture("foundation_brown_brick.jpg");
-	auto wall_specular = load_texture("foundation_brown_brick_spec.jpg");
+	auto wall_diffuse = load_image("foundation_brown_brick.jpg", ImageType::REPEAT);
+	auto wall_specular = load_image("foundation_brown_brick_spec.jpg", ImageType::REPEAT);
 
-	auto projImage = load_image("bulletholes.png", ImageType::CLAMP);
+	auto projImage = load_image("bulletholes.png");
 	auto wall_tex = load_image("foundation_brown_brick.jpg", ImageType::REPEAT);
 
 	auto humveeMaterial = new Material(projector_shader, humvee_diffuse, projImage);
@@ -482,12 +482,12 @@ void Scene4(GLFWwindow *window)
 
 	auto cube = make_mesh("cube.obj");
 
-	auto transparent = load_texture("transparent.png");
+	auto transparent = load_image("transparent.png", ImageType::REPEAT);
 
-	auto building_diffuse = load_texture("house.png");
-	auto building_specular = load_texture("house_specular.png");
+	auto building_diffuse = load_image("house.png", ImageType::REPEAT);
+	auto building_specular = load_image("house_specular.png", ImageType::REPEAT);
 
-	auto projImage = load_image("graffiti.png", ImageType::CLAMP);
+	auto projImage = load_image("graffiti.png");
 
 	auto floor_diffuse = load_image("grass_ground.jpg", ImageType::REPEAT);
 
