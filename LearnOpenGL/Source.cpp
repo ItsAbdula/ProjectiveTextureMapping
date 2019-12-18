@@ -149,7 +149,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	camera.ProcessMouseScroll(yoffset);
 }
 
-
 void Scene1(GLFWwindow *window)
 {
 	auto cam_programID = build_program("Camera");
@@ -360,7 +359,6 @@ void Scene2(GLFWwindow *window)
 		table_top->set_material(cubeMaterial);
 	}
 
-
 	while (!glfwWindowShouldClose(window))
 	{
 		double currentFrame = glfwGetTime();
@@ -453,7 +451,6 @@ void Scene3(GLFWwindow *window)
 	{
 		wall_2->set_material(wallMaterial);
 	}
-
 
 	while (!glfwWindowShouldClose(window))
 	{
