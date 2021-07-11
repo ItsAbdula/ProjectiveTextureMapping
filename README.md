@@ -13,15 +13,15 @@ Scene은 총 4개로 이루어져 있으며, CMD로 입력합니다.(1-4)
 
 Requirement
 ---
-Windows OS
+Windows10\
 MSVC v140+ (Visual Studio 2019)
 
 References
 ---
-OpenGL
-GLFW
-GLEW
-glm
+OpenGL\
+GLFW\
+GLEW\
+glm\
 stb_image
 
 fork from https://git.ajou.ac.kr/Choi/ProjectiveTextureMapping
