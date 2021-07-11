@@ -1,5 +1,7 @@
 # ProjectiveTextureMapping
 
+![](https://github.com/ItsAbdula/ProjectiveTextureMapping/blob/master/READMEAssets/usage.gif?raw=true)
+
 OpenGL로 구현한 ProjectiveTextureMapping 입니다.
 
 Scene은 총 4개로 이루어져 있으며, CMD로 입력합니다.(1-4)
