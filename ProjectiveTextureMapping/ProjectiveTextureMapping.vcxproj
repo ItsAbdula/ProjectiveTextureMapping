@@ -162,6 +162,22 @@
     <ClInclude Include="ShaderType.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\Camera\Camera.frag" />
+    <None Include="..\Shaders\Camera\Camera.vert" />
+    <None Include="..\Shaders\First\First.frag" />
+    <None Include="..\Shaders\First\First.vert" />
+    <None Include="..\Shaders\Lighting_Lamp\Lighting_Lamp.frag" />
+    <None Include="..\Shaders\Lighting_Lamp\Lighting_Lamp.vert" />
+    <None Include="..\Shaders\Lighting_Maps\Lighting_Maps.frag" />
+    <None Include="..\Shaders\Lighting_Maps\Lighting_Maps.vert" />
+    <None Include="..\Shaders\Lighting_Specular\Lighting_Specular.frag" />
+    <None Include="..\Shaders\Lighting_Specular\Lighting_Specular.vert" />
+    <None Include="..\Shaders\Projector\Projector.frag" />
+    <None Include="..\Shaders\Projector\Projector.vert" />
+    <None Include="..\Shaders\Texture\Texture.frag" />
+    <None Include="..\Shaders\Texture\Texture.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

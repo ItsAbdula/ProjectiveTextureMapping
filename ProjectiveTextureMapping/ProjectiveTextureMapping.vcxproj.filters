@@ -66,4 +66,48 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Shaders\Camera\Camera.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Camera\Camera.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\First\First.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\First\First.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Projector\Projector.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Projector\Projector.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Lamp\Lighting_Lamp.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Lamp\Lighting_Lamp.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Maps\Lighting_Maps.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Maps\Lighting_Maps.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Specular\Lighting_Specular.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Lighting_Specular\Lighting_Specular.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Texture\Texture.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\Shaders\Texture\Texture.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
